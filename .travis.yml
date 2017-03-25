@@ -1,0 +1,35 @@
+language: cpp
+compiler:
+  - gcc
+os:
+  - linux
+dist: trusty
+sudo: false
+cache:
+  directories:
+    - "$HOME/texlive/2016/texmf-var/luatex-cache"
+    - "$HOME/.ghc"
+    - "$HOME/.cabal"
+    - "$HOME/.stack"
+addons:
+  apt:
+    packages:
+      - cabal-install-1.22
+      - ghc-7.10.3
+    sources:
+      - hvr-ghc
+before_install:
+  - export PATH=/opt/ghc/7.10.3/bin:/opt/cabal/1.22/bin:$HOME/.local/bin:$HOME/.cabal/bin:$PATH
+  - wget https://raw.githubusercontent.com/y-yu/install-tex-travis/master/install-tex.sh
+  - wget https://raw.githubusercontent.com/y-yu/install-tex-travis/master/tlmgr.sh
+  - chmod +x install-tex.sh tlmgr.sh
+  - cabal update
+install:
+  - . ./install-tex.sh
+  - ./tlmgr.sh install collection-luatex collection-langjapanese collection-fontsrecommended type1cm mdframed needspace everyhook svn-prov
+  - cabal install pandoc-1.16
+before_script:
+  - export USE_IPAFONT=true
+script:
+  - make index.html
+  - make index.pdf
