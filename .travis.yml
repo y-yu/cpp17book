@@ -7,7 +7,7 @@ dist: trusty
 sudo: false
 cache:
   directories:
-    - "$HOME/texlive/2016/texmf-var/luatex-cache"
+    - "$HOME/texlive/2017/texmf-var/luatex-cache"
     - "$HOME/.ghc"
     - "$HOME/.cabal"
     - "$HOME/.stack"

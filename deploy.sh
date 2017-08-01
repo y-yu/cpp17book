@@ -10,9 +10,9 @@ if [[ "${TRAVIS_OS_NAME}" == "linux" && "${TRAVIS_BRANCH}" == "master" && "${TRA
   git fetch origin gh-pages:gh-pages
   git stash -u
   git checkout gh-pages
-  rm index.pdf
+  rm index.pdf index.html
   git stash pop
-  git add index.pdf
+  git add index.pdf index.html
   git commit -a -m "auto commit on travis $TRAVIS_JOB_NUMBER $TRAVIS_COMMIT"
   git push git@github.com:y-yu/cpp17book.git gh-pages:gh-pages
 fi
