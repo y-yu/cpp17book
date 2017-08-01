@@ -26,10 +26,16 @@ before_install:
   - cabal update
 install:
   - . ./install-tex.sh
-  - ./tlmgr.sh install collection-luatex collection-langjapanese collection-fontsrecommended type1cm mdframed needspace everyhook svn-prov
+  - ./tlmgr.sh install collection-luatex collection-langjapanese collection-fontsrecommended
+    type1cm mdframed needspace everyhook svn-prov
   - cabal install pandoc-1.16
 before_script:
   - export USE_IPAFONT=true
 script:
   - make index.html
   - make index.pdf
+after_success:
+  - ./deploy.sh
+env:
+  global:
+  - secure: edc73BnxURY9dMmjtiEw4dF6bFUlz2uRQs+qAX6cF8HRuwF9mkYVMXLfEPb7wDZXMyXmLKQnbr/UhFVAIlJl34Nz1MPC6imCE/n8kkky9tSdx5300KK4VfCA89u5Hp/JWi6bY6wgLqcZ3XQtNXFzZiG//Z+bNpVqZc7pFv0qtScIg8yS80c1T4QdnVu6HFNHQhbgOTKR46ivSb7ZN9pB2oFXCWh8HZu4o9OBhj60D6WE/TXObKRRZNOjcCXPSzugIVJqVpf8LeFKVkDc1Q8AEw5LkQJ5MMVTOehCUr/al/YfsyoSEAeu6RMyUyC7bkIBob6Oc25Alm2PowP/ATIi9It3cIeu7P/17PEEecARvk8ul6ZhP/n7bKBTOxaVAND3XAVWfRvS7k0QJM4hb1V78xb1GwXQSZB4s2n0ryxtUNEV8xxnWG1CivR2chhx72TT261KKnX7HVe1OrBExxVx7tJGZNNrpoI9YI9kjJP8VoH/EGuwEqjdHclTN9Ql8DTLIZ3yHa1sLdob0n1IwD4as+Q8+qIdGFIqzJieRKuHmFgLQHWwgslaviMbTvfDAMgG6z4mkv0MS+0nRtEc7Nwg9k4jC3uIaDP3yrR7QnpOeeMdleGRPffrpiW4gez22AiMXDz9MhMAR4UM6dGc42l7HsTRUG8jERjmV0W8eyi1/tw=
