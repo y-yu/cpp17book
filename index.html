@@ -223,7 +223,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#同一性の比較-1">同一性の比較</a></li>
 <li><a href="#大小比較-1">大小比較</a></li>
 </ul></li>
-<li><a href="#optionalとstdnullpotとの比較">optionalとstd::nullpotとの比較</a></li>
+<li><a href="#optionalとstdnulloptとの比較">optionalとstd::nulloptとの比較</a></li>
 <li><a href="#optionaltとtの比較">optional&lt;T&gt;とTの比較</a></li>
 <li><a href="#make_optionalt-optionaltを返す">make_optional&lt;T&gt; : optional&lt;T&gt;を返す</a></li>
 <li><a href="#make_optionalt-args-...-optionaltをin_place_type構築して返す">make_optional&lt;T, Args ... &gt; : optional&lt;T&gt;をin_place_type構築して返す</a></li>
@@ -357,7 +357,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// 文字列を処理する関数</span>
 <span class="dt">void</span> process_string( <span class="bu">std::</span>string <span class="at">const</span> &amp; str ) ;
 
-<span class="pp">#ifndef __cpp_rvalue_references</span>
+<span class="pp">#ifdef __cpp_rvalue_references</span>
 <span class="co">// 文字列をムーブして処理してよい実装の関数</span>
 <span class="co">// C++コンパイラーがrvalueリファレンスを実装していない場合はコンパイルされない</span>
 <span class="dt">void</span> process_string( <span class="bu">std::</span>string &amp;&amp; str ) ;
@@ -3768,7 +3768,7 @@ T* any_cast(any* operand) <span class="kw">noexcept</span>;</code></pre></div>
     <span class="co">// 1 &lt; 0はfalse</span>
     <span class="dt">bool</span> b3 = a &lt; b ;
 }</code></pre></div>
-<h3 id="optionalとstdnullpotとの比較">optionalとstd::nullpotとの比較</h3>
+<h3 id="optionalとstdnulloptとの比較">optionalとstd::nulloptとの比較</h3>
 <p>optionalとstd::nulloptとの比較は、std::nulloptが値を持っていないoptionalとして扱われる。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
 <h3 id="optionaltとtの比較">optional&lt;T&gt;とTの比較</h3>
@@ -3845,9 +3845,9 @@ T* any_cast(any* operand) <span class="kw">noexcept</span>;</code></pre></div>
     <span class="co">// OK</span>
     process_string( <span class="st">&quot;hello&quot;</span> ) ;
     <span class="co">// OK</span>
-    process_string( <span class="st">&quot;hello&quot;</span>, <span class="dv">5</span> ) ;
+    process_string( { <span class="st">&quot;hello&quot;</span>, <span class="dv">5</span> } ) ;
 
-    <span class="bu">std::</span>string str(<span class="st">&quot;hello&quot;</span>) ;
+    <span class="bu">std::</span>string str( <span class="st">&quot;hello&quot;</span> ) ;
     process_string( str ) ;
 }</code></pre></div>
 <h2 id="basic_string_view">basic_string_view</h2>
