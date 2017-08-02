@@ -31,9 +31,9 @@ index.md : *.md
 	pandoc -s --toc --toc-depth=6 --mathjax -o index.md -H style.css  pandoc_title_block *-*.md
 
 index.pdf : *.md
-	pandoc -s --toc --toc-depth=6 -o index.pdf --template template.tex --latex-engine lualatex   pandoc_title_block *-*.md
+	pandoc --listings -s --toc --toc-depth=6 -o index.pdf --template template.tex --latex-engine lualatex   pandoc_title_block *-*.md
 
 index.tex : *.md
-	pandoc -s --toc --toc-depth=6 -o index.tex --template template.tex --latex-engine lualatex   pandoc_title_block *-*.md
+	pandoc --listings -s --toc --toc-depth=6 -o index.tex --template template.tex --latex-engine lualatex   pandoc_title_block *-*.md
 
 .PHONY : all book clean test test-tool texttest cpptest retest

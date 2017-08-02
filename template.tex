@@ -276,12 +276,10 @@ $endif$
   basicstyle=\tt\footnotesize,
   frame=single,
   breaklines=true
-}
-
-\lstdefinestyle{scala}{
   breakatwhitespace=false,
-  language=scala,
+  language=C++,
   frame=none,
+  numbers=left,
   commentstyle=\commentstyle,
   extendedchars=true,
   keepspaces=true,
@@ -305,23 +303,6 @@ $endif$
   innerrightmargin=6pt,
   innertopmargin=10pt,
   innerbottommargin=6pt]{lstlisting}
-
-\lstdefinelanguage{scala}{
-  morekeywords={abstract,case,catch,class,def,%
-    do,else,extends,false,final,finally,%
-    for,if,implicit,import,match,mixin,%
-    new,null,object,override,package,%
-    private,protected,requires,return,sealed,%
-    super,this,throw,trait,true,try,%
-    type,val,var,while,with,yield},
-  moreemph={},
-  otherkeywords={},
-  sensitive=true,
-  morecomment=[l]{//},
-  morecomment=[n]{/*}{*/},
-  morestring=[b]",
-  morestring=[b]"""
-}
 
 % Needed for recent update to Pandoc ------------
 
