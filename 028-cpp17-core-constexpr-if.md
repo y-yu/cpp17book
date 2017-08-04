@@ -281,7 +281,7 @@ struct X
 template < typename T >
 int f(T x)
 {
-    if constexpr ( std::is_same_v<T, std::decay_t<X> > )
+    if constexpr ( std::is_same_v<std::decay_t<T>, X > )
         return x.get() ;
     else
         return x ;
@@ -367,7 +367,7 @@ void f()
 
 ~~~cpp
 template  <typename ... >
-using false_t = false ;
+bool false_v = false ;
 
 template < typename T >
 void f()
@@ -376,12 +376,12 @@ void f()
         if constexpr ( E2 )
             if constepxr ( E3 )
             {
-                static_assert( false_t<T> ) ;
+                static_assert( false_v<T> ) ;
             }
 }
 ~~~
 
-このようにfalse_tを使うことで、static_assertをテンプレート引数Tに依存させる。その結果、static_assertの発動をテンプレートの実体化まで遅延させることができる。
+このようにfalse_vを使うことで、static_assertをテンプレート引数Tに依存させる。その結果、static_assertの発動をテンプレートの実体化まで遅延させることができる。
 
 constexpr ifは非テンプレートコードでも書くことができるが、その場合は普通のif文と同じだ。
 
