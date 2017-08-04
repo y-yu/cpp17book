@@ -298,6 +298,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 </ul></li>
+<li><a href="#数学用の特殊関数群">数学用の特殊関数群</a><ul>
+<li><a href="#陪ラゲル多項式associated-laguerre-polynominals">陪ラゲル多項式(Associated Laguerre polynominals)</a></li>
+<li><a href="#sf.cmath.assoc_legendre">陪ルジャンドル関数(Associated Legendre functions)</a></li>
+<li><a href="#ベータ関数beta-function">ベータ関数(Beta function)</a></li>
+<li><a href="#第一種完全楕円積分complete-elliptic-integral-of-the-first-kind">第一種完全楕円積分(Complete elliptic integral of the first kind)</a></li>
+<li><a href="#第二種完全楕円積分complete-elliptic-integral-of-the-second-kind">第二種完全楕円積分(Complete elliptic integral of the second kind)</a></li>
+<li><a href="#第三種完全楕円積分complete-elliptic-integral-of-the-third-kind">第三種完全楕円積分(Complete elliptic integral of the third kind)</a></li>
+<li><a href="#sf.cmath.cyl_bessel_i">正則変形円柱ベッセル関数(Regular modified cylindrical Bessel functions)</a></li>
+<li><a href="#sf.cmath.cyl_bessel_j">第一種円柱ベッセル関数(Cylindrical Bessel functions of the first kind)</a></li>
+<li><a href="#非正則変形円柱ベッセル関数irregular-modified-cylindrical-bessel-functions">非正則変形円柱ベッセル関数(Irregular modified cylindrical Bessel functions)</a></li>
+<li><a href="#sf.cmath.cyl_neumann">円柱ノイマン関数(Cylindrical Neumann functions)</a></li>
+<li><a href="#sf.cmath.ellint_1">第一種不完全楕円積分(Incomplete elliptic integral of the first kind)</a></li>
+<li><a href="#sf.cmath.ellint_2">第二種不完全楕円積分(Incomplete elliptic integroal of the second kind)</a></li>
+<li><a href="#sf.cmath.ellint_3">第三種不完全楕円積分(Incomplete elliptic integral of the third kind)</a></li>
+<li><a href="#指数積分exponential-integral">指数積分(Exponential integral)</a></li>
+<li><a href="#エルミート多項式hermite-polynominals">エルミート多項式(Hermite polynominals)</a></li>
+<li><a href="#ラゲル多項式laguerre-polynomials">ラゲル多項式(Laguerre polynomials)</a></li>
+<li><a href="#ルジャンドル多項式legendre-polynominals">ルジャンドル多項式(Legendre polynominals)</a></li>
+<li><a href="#リーマンゼータ関数riemann-zeta-function">リーマンゼータ関数(Riemann zeta function)</a></li>
+<li><a href="#第一種球面ベッセル関数spherical-bessel-functions-of-the-first-kind">第一種球面ベッセル関数(Spherical Bessel functions of the first kind)</a></li>
+<li><a href="#球面陪ルジャンドル関数spherical-associated-legendre-functions">　球面陪ルジャンドル関数(Spherical associated Legendre functions)</a></li>
+<li><a href="#球面ノイマン関数spherical-neumann-functions">球面ノイマン関数(Spherical Neumann functions)</a></li>
+</ul></li>
 </ul>
 </div>
 <h1 id="序">序</h1>
@@ -438,7 +461,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// 変数</span>
 <span class="co">// どちらでもよい</span>
 [[<span class="at">deprecated</span>]] <span class="dt">int</span> variable_name1 { } ;
-<span class="dt">int</span> variable_name2 [[<span class="at">deprecated</span>]] { }
+<span class="dt">int</span> variable_name2 [[<span class="at">deprecated</span>]] { } ;
 
 <span class="co">// typedef名</span>
 [[<span class="at">deprecated</span>]] <span class="kw">typedef</span> <span class="dt">int</span> typedef_name1 ;
@@ -449,7 +472,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="co">// メンバー関数も同じ文法</span>
 <span class="co">// どちらでもよい</span>
 [[<span class="at">deprecated</span>]] <span class="dt">void</span> function_name1() { }
-<span class="dt">void</span> function_name2 [[<span class="at">deprecated</span>]] { }
+<span class="dt">void</span> function_name2 [[<span class="at">deprecated</span>]] () { }
 
 
 <span class="co">// クラス</span>
@@ -477,7 +500,7 @@ enumerator_name [[<span class="at">deprecated</span>]] = <span class="dv">42</sp
 <span class="kw">class</span> template_name { } ;
 
 <span class="kw">template</span> &lt; &gt;
-<span class="kw">class</span> [[<span class="at">deprecated</span>]] template_name&lt;<span class="dt">void</span>&gt; { }</code></pre></div>
+<span class="kw">class</span> [[<span class="at">deprecated</span>]] template_name&lt;<span class="dt">void</span>&gt; { } ;</code></pre></div>
 <p>deprecated属性が指定された名前やエンティティを使うと、C++コンパイラーは警告メッセージを出す。</p>
 <p>deprecated属性には、文字列を付け加えることができる。これはC++実装によっては警告メッセージに含まれるかもしれない。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">[[<span class="at">deprecated</span>(<span class="st">&quot;Use of f() is deprecated. Use f(int option) instead.&quot;</span>)]] <span class="dt">void</span> f() ;
@@ -1238,8 +1261,8 @@ T f( T x ) { <span class="cf">return</span> x ; }
    <span class="dt">void</span> f()
    {
         <span class="co">// thisはポインターのキャプチャー</span>
-        <span class="co">// dataはthisポインターを</span>
-        [<span class="kw">this</span>]{ data = <span class="dv">1</span> ; }() ;
+        <span class="co">// dataはthisポインターを辿る。</span>
+        [<span class="kw">this</span>]{ data = <span class="dv">1</span> ; }() ;
 
         <span class="co">// this-&gt;dataは1</span>
 
@@ -1255,8 +1278,8 @@ T f( T x ) { <span class="cf">return</span> x ; }
         <span class="co">// 変更されたのはコピーされたクロージャーオブジェクト内の*this        </span>
    }
 } ;</code></pre></div>
-<p>最初のラムダ式で生成されるクロージャーオブジェクトは以下のようなものだ。 <sub>~</sub>c++ class closure_object { X * this_ptr ;</p>
-<p>public : closure_object( X * this ) : this(this) { }</p>
+<p>最初のラムダ式で生成されるクロージャーオブジェクトは以下のようなものだ。 <sub>~</sub>cpp class closure_object { X * this_ptr ;</p>
+<p>public : closure_object( X * this_ptr ) : this_ptr(this_ptr) { }</p>
 <pre><code>void operator () const
 {
     this_ptr-&gt;data = 1 ;
@@ -1321,7 +1344,7 @@ T f( T x ) { <span class="cf">return</span> x ; }
 
     <span class="kw">auto</span> f()
     {
-        <span class="cf">return</span> [ tmp = *<span class="kw">this</span> ] { <span class="cf">return</span> <span class="kw">this</span>-&gt;data ; } ;
+        <span class="cf">return</span> [ tmp = *<span class="kw">this</span> ] { <span class="cf">return</span> tmp.data ; } ;
     }
 } ;</code></pre></div>
 <p>機能テストマクロは__cpp_capture_star_this, 値は201603。</p>
@@ -1333,7 +1356,7 @@ T f( T x ) { <span class="cf">return</span> x ; }
 
     <span class="kw">constexpr</span> <span class="dt">int</span> value = f() ; <span class="co">// OK</span>
 }</code></pre></div>
-<p>constexprの条件を満たす　ラムダ式はコンパイル時定数を必要とする場所で使うことができる。例えばconstexpr変数や配列の添字やstatic_assertなどだ。</p>
+<p>constexprの条件を満たすラムダ式はコンパイル時定数を必要とする場所で使うことができる。例えばconstexpr変数や配列の添字やstatic_assertなどだ。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
 {
     <span class="kw">auto</span> f = []{ <span class="cf">return</span> <span class="dv">42</span> ; } ;
@@ -1449,7 +1472,7 @@ T f( T x ) { <span class="cf">return</span> x ; }
 } ;
 
 <span class="co">// 失敗するかもしれない処理</span>
-<span class="dt">int</span> do_something_that_may_fail()
+error_code do_something_that_may_fail()
 {
     <span class="co">// 処理</span>
 
@@ -1467,7 +1490,7 @@ T f( T x ) { <span class="cf">return</span> x ; }
 <span class="dt">int</span> main()
 {
     <span class="co">// エラーを確認していない</span>
-    do_soemthing() ;
+    do_something_that_may_fail() ;
 
     <span class="co">// エラーがない前提で次の処理をしようとする</span>
     do_something_on_no_error() ;
@@ -1759,7 +1782,7 @@ distance( Iterator first, Iterator last )
 <span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;
 <span class="dt">int</span> f(T x)
 {
-    <span class="cf">if</span> <span class="kw">constexpr</span> ( <span class="bu">std::</span>is_same_v&lt;T, <span class="bu">std::</span>decay_t&lt;X&gt; &gt; )
+    <span class="cf">if</span> <span class="kw">constexpr</span> ( <span class="bu">std::</span>is_same_v&lt;<span class="bu">std::</span>decay_t&lt;T&gt;, X &gt; )
         <span class="cf">return</span> x.get() ;
     <span class="cf">else</span>
         <span class="cf">return</span> x ;
@@ -1822,7 +1845,7 @@ distance( Iterator first, Iterator last )
 <p>現実には、E1, E2, E3は複雑な式なので、static_assert( E1 &amp;&amp; E2 &amp;&amp; E3 )と書くのは冗長だ。同じ内容を二度書くのは間違いの元だ。</p>
 <p>このような場合、static_assertのオペランドをテンプレート引数に依存するようにすると、constexpr ifの条件に会うときにだけ発動するstatic_assertが書ける。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span>  &lt;<span class="kw">typename</span> ... &gt;
-<span class="kw">using</span> <span class="dt">false_t</span> = <span class="kw">false</span> ;
+<span class="dt">bool</span> false_v = <span class="kw">false</span> ;
 
 <span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;
 <span class="dt">void</span> f()
@@ -1831,10 +1854,10 @@ distance( Iterator first, Iterator last )
         <span class="cf">if</span> <span class="kw">constexpr</span> ( E2 )
             <span class="cf">if</span> constepxr ( E3 )
             {
-                <span class="kw">static_assert</span>( <span class="dt">false_t</span>&lt;T&gt; ) ;
+                <span class="kw">static_assert</span>( false_v&lt;T&gt; ) ;
             }
 }</code></pre></div>
-<p>このようにfalse_tを使うことで、static_assertをテンプレート引数Tに依存させる。その結果、static_assertの発動をテンプレートの実体化まで遅延させることができる。</p>
+<p>このようにfalse_vを使うことで、static_assertをテンプレート引数Tに依存させる。その結果、static_assertの発動をテンプレートの実体化まで遅延させることができる。</p>
 <p>constexpr ifは非テンプレートコードでも書くことができるが、その場合は普通のif文と同じだ。</p>
 <h3 id="constexpr-ifでは解決できない問題">constexpr ifでは解決できない問題</h3>
 <p>constexpr ifは条件付きコンパイルではなく、条件付きテンプレート実体化の抑制なので、最初の問題の解決には使えない。例えば以下のコードはエラーになる</p>
@@ -2070,7 +2093,7 @@ Container( <span class="bu">std::</span>initializer_list&lt;T&gt; ) -&gt; Contai
 <p>C++17では、属性名前空間にusingディレクティブのような記述ができるようになった。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">
 <span class="co">// [[extention::foo, extention::bar]]と同じ</span>
-[ <span class="kw">using</span> extention : foo, bar ]] <span class="dt">int</span> x ;</code></pre></div>
+[[ <span class="at">using</span> <span class="at">extention</span> <span class="at">:</span> <span class="at">foo</span>, <span class="at">bar</span> ]] <span class="dt">int</span> x ;</code></pre></div>
 <p>属性トークンには、属性名前空間をつけることができる。これにより、独自拡張の属性トークンの名前の衝突を避けることができる。</p>
 <p>例えば、あるC++コンパイラーには独自拡張としてfoo, barという属性トークンがあり、別のC++コンパイラーも同じく独自拡張としてfoo, barという属性トークンを持っているが、それぞれ意味が違っている場合、コードの意味も違ってしまう。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp">[[ <span class="at">foo</span>, <span class="at">bar</span> ]] <span class="dt">int</span> x ;</code></pre></div>
@@ -2511,7 +2534,7 @@ type c = get&lt;<span class="dv">2</span>&gt;(e) ;</code></pre></div>
 <p>したがって関数のインライン展開という最適化を適用すべきかどうかを決定するには、関数のコードサイズが十分に小さい時、関数の実行時間が十分に短い時、タイトなループの中など、様々な条件を考慮しなければならない。</p>
 <p>昔のコンパイラー技術が未熟だった時代のC++コンパイラーは関数をインライン展開するべきかどうかの判断ができなかった。そのためinlineキーワードが追加された。インライン展開してほしい関数をinline関数にすることで、コンパイラーはその関数がインライン展開するべき関数だと認識する。</p>
 <h3 id="現代のinlineの意味">現代のinlineの意味</h3>
-<p>現代では、コンパイラー技術の発展によりC++コンパイラーは十分に賢くなったので、関数をインライン展開させる目的でinlineキーワードを使う必要はない。実際、現代のC++コンパイラーはinlineキーワードを無視する。関数をインライン展開すべきかどうかはコンパイラーが判断できる。</p>
+<p>現代では、コンパイラー技術の発展によりC++コンパイラーは十分に賢くなったので、関数をインライン展開させる目的でinlineキーワードを使う必要はない。実際、現代のC++コンパイラーではinlineキーワードはインライン展開を強制しない。関数をインライン展開すべきかどうかはコンパイラーが判断できる。</p>
 <p>inlineキーワードにはインライン展開以外に、もうひとつの意味がある。ODR(One Definition Rule、定義はひとつの原則)の回避だ。</p>
 <p>C++では、定義はプログラム中にひとつしか書くことができない。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">void</span> f() ; <span class="co">// OK、宣言</span>
@@ -2742,10 +2765,10 @@ type c = get&lt;<span class="dv">2</span>&gt;(e) ;</code></pre></div>
 
     <span class="co">// intが入っているか確認</span>
     <span class="co">// falseを返す</span>
-    <span class="dt">bool</span> has_int = <span class="bu">std::</span>hold_alternative&lt;<span class="dt">int</span>&gt;( x ) ;
+    <span class="dt">bool</span> has_int = <span class="bu">std::</span>holds_alternative&lt;<span class="dt">int</span>&gt;( x ) ;
     <span class="co">// std::stringが入っているか確認</span>
     <span class="co">// trueを返す</span>
-    <span class="dt">bool</span> has_string = <span class="bu">std::</span>hold_alternative&lt;<span class="bu">std::</span>string&gt; ( x ) ;
+    <span class="dt">bool</span> has_string = <span class="bu">std::</span>holds_alternative&lt;<span class="bu">std::</span>string&gt; ( x ) ;
 
     <span class="co">// 入っている値を得る</span>
     <span class="co">// &quot;hello&quot;</span>
@@ -3219,11 +3242,11 @@ type c = get&lt;<span class="dv">2</span>&gt;(e) ;</code></pre></div>
 <p>つまり、variant v, wに対して、式 get&lt;i&gt;(v) == get&lt;i&gt;(w) がすべてのiに対して妥当でなければならない。</p>
 <p>variant v, wの同一性の比較は、v == w の場合、以下のように行われる。</p>
 <ol style="list-style-type: decimal">
-<li>v.index() != v.indexならば、false</li>
+<li>v.index() != w.index()ならば、false</li>
 <li>それ以外の場合、v.value_less_by_exception()ならば、true</li>
 <li>それ以外の場合、get&lt;i&gt;(v) == get&lt;i&gt;(w)。ただしiはv.index()</li>
 </ol>
-<p>二つのvariantが別の型を保持している場合は等しくない。ともに値なしの状態であれば等しい。それ以外は保持している。</p>
+<p>二つのvariantが別の型を保持している場合は等しくない。ともに値なしの状態であれば等しい。それ以外は保持している値同士が比較される。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
 {
     <span class="bu">std::</span>variant&lt; <span class="dt">int</span>, <span class="dt">double</span> &gt; a(<span class="dv">0</span>), b(<span class="dv">0</span>) ;
@@ -3258,7 +3281,7 @@ type c = get&lt;<span class="dv">2</span>&gt;(e) ;</code></pre></div>
 <li>w.valueless_by_exception()ならば、false</li>
 <li>それ以外の場合、v.valueless_by_exception()ならば、true</li>
 <li>それ以外の場合、v.index() &lt; w.index()ならば、true</li>
-<li>それ以外の場合、v.index &gt; w.index()ならば、false</li>
+<li>それ以外の場合、v.index() &gt; w.index()ならば、false</li>
 <li>それ以外の場合、get&lt;i&gt;(v) &lt; get&lt;i&gt;(w)。ただしiはv.index()</li>
 </ol>
 <p>値なしのvariantは最も小さいとみなされる。インデックスの小さいほうが小さいとみなされる。どちらも同じ型の値があるのであれば、値同士の比較となる。</p>
@@ -3289,7 +3312,7 @@ type c = get&lt;<span class="dv">2</span>&gt;(e) ;</code></pre></div>
         <span class="cf">return</span> <span class="kw">true</span> ;
     <span class="cf">else</span> <span class="cf">if</span> ( v.index() &lt; w.index() )
         <span class="cf">return</span> <span class="kw">true</span> ;
-    <span class="cf">else</span> <span class="cf">if</span> ( v.index &gt; w.index() )
+    <span class="cf">else</span> <span class="cf">if</span> ( v.index() &gt; w.index() )
         <span class="cf">return</span> <span class="kw">false</span> ;
     <span class="cf">else</span>
         <span class="cf">return</span> <span class="bu">std::</span>visit( []( <span class="kw">auto</span> &amp;&amp; a, <span class="kw">auto</span> &amp;&amp; b ){ <span class="cf">return</span> a &lt; b ; }, v, w ) ;
@@ -3399,7 +3422,7 @@ type c = get&lt;<span class="dv">2</span>&gt;(e) ;</code></pre></div>
     <span class="bu">std::</span>any a ;
 
     <span class="co">// 型XをX(1, 2)で構築した結果の値を保持する</span>
-    a.emplace( <span class="dv">1</span>, <span class="dv">2</span> ) ;
+    a.emplace&lt;X&gt;( <span class="dv">1</span>, <span class="dv">2</span> ) ;
 }</code></pre></div>
 <h4 id="reset-値の破棄">reset : 値の破棄</h4>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">void</span> reset() <span class="kw">noexcept</span> ; </code></pre></div>
@@ -3571,7 +3594,7 @@ T* any_cast(any* operand) <span class="kw">noexcept</span>;</code></pre></div>
 {
     <span class="co">// int型の値を保持するかしないoptional</span>
     <span class="kw">using</span> a = <span class="bu">std::</span>optional&lt;<span class="dt">int</span>&gt; ;
-    <span class="co">// double型の値を保持するかしないottional</span>
+    <span class="co">// double型の値を保持するかしないoptional</span>
     <span class="kw">using</span> b = <span class="bu">std::</span>optional&lt;<span class="dt">double</span>&gt; ;
 }</code></pre></div>
 <h3 id="optionalの構築">optionalの構築</h3>
@@ -3725,7 +3748,7 @@ T* any_cast(any* operand) <span class="kw">noexcept</span>;</code></pre></div>
 
     <span class="co">// true</span>
     <span class="co">// どちらも値を保持しないoptional</span>
-    <span class="dt">bool</span> b1 a == b ;
+    <span class="dt">bool</span> b1 = a == b ;
 
     a = <span class="dv">0</span> ;
 
@@ -3770,7 +3793,6 @@ T* any_cast(any* operand) <span class="kw">noexcept</span>;</code></pre></div>
 }</code></pre></div>
 <h3 id="optionalとstdnulloptとの比較">optionalとstd::nulloptとの比較</h3>
 <p>optionalとstd::nulloptとの比較は、std::nulloptが値を持っていないoptionalとして扱われる。</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
 <h3 id="optionaltとtの比較">optional&lt;T&gt;とTの比較</h3>
 <p>optional&lt;T&gt;とT型の比較をする場合、optionalは値を保持していなければならない。</p>
 <h3 id="make_optionalt-optionaltを返す">make_optional&lt;T&gt; : optional&lt;T&gt;を返す</h3>
@@ -3849,6 +3871,10 @@ T* any_cast(any* operand) <span class="kw">noexcept</span>;</code></pre></div>
 
     <span class="bu">std::</span>string str( <span class="st">&quot;hello&quot;</span> ) ;
     process_string( str ) ;
+
+    <span class="dt">string_type</span> st{<span class="dv">5</span>, <span class="st">&quot;hello&quot;</span>} ;
+
+    process_string( st ) ;
 }</code></pre></div>
 <h2 id="basic_string_view">basic_string_view</h2>
 <p>std::stringがstd::basic_string&lt; CharT, Traits &gt;に対するstd::basic_string<char>であるように、std::string_viewも、その実態はstd::basic_string_viewの特殊化へのtypedef名だ。</p>
@@ -4263,7 +4289,7 @@ polymorphic_allocator(memory_resource* r);</code></pre></div>
 
     <span class="bu">std::</span>pmr<span class="bu">::</span>polymorphic_allocator&lt;<span class="dt">int</span>&gt; p2( <span class="bu">std::</span>pmr<span class="bu">::</span>get_default_resource() ) ;
 }</code></pre></div>
-<p>後は通常のあロケーターと同じように振る舞う。</p>
+<p>後は通常のアロケーターと同じように振る舞う。</p>
 <h2 id="プログラム全体で使われるメモリーリソースの取得">プログラム全体で使われるメモリーリソースの取得</h2>
 <p>C++17では、プログラム全体で使われるメモリーリソースへのポインターを取得することができる。</p>
 <h3 id="new_delete_resource">new_delete_resource()</h3>
@@ -4886,5 +4912,373 @@ monotonic_buffer_resource(<span class="dt">void</span> *buffer, <span class="dt"
 <p>そのため、標準ライブラリは実行ポリシーのオブジェクトを用意している。seqとparとpar_unseqがある。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="bu">std::</span>for_each( <span class="bu">std::</span>execution<span class="bu">::</span>par, ... ) ;</code></pre></div>
 <p>並列アルゴリズムを使うには、このオブジェクトを並列アルゴリズムの第一引数に渡すことになる。</p>
+<h1 id="数学用の特殊関数群">数学用の特殊関数群</h1>
+<p>C++17では数学用の特殊関数群(mathematical special functions)が追加された。</p>
+<p>数学用の特殊関数は、いずれも実引数をとって、規定の計算をし、結果を浮動小数点数型の戻り値として返す。</p>
+<p>数学用の特殊関数はdouble, float, long double型の3つのオーバーロードがある。それぞれ、関数名の最後に、何もなし、f, lというサフィックスで表現されている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      function_name() ;   <span class="co">// 何もなし</span>
+<span class="dt">float</span>       function_namef() ;  <span class="co">// f</span>
+<span class="dt">long</span> <span class="dt">double</span> function_namel() ;  <span class="co">// l</span></code></pre></div>
+<p>数学用の特殊関数の説明は、関数の宣言、効果、戻り値、注意がある。</p>
+<p>もし、数学用の特殊関数に渡した実引数がNaN(Not a Number)である場合、関数の戻り値もNaNになる。ただし定義域エラーは起こらない。</p>
+<p>それ以外の場合で、関数が定義域エラーを返すべきときは、</p>
+<ul>
+<li>関数の戻り値の記述で、定義域が示されていて実引数が示された定義域を超えるとき</li>
+<li>実引数に対応する数学関数の結果の値が非ゼロの虚数部を含むとき</li>
+<li>実引数に対応する数学関数の結果の値が数学的に定義されていないとき</li>
+</ul>
+<p>別途示されていない場合、関数はすべての有限の値、負の無限大、正の無限大に対しても定義されている。</p>
+<p>数学関数が与えられた実引数の値に対して定義されているというとき、それは以下のいずれかである。</p>
+<ul>
+<li>実引数の値の集合に対して明示的に定義されている</li>
+<li>計算方法に依存しない極限値が存在する</li>
+</ul>
+<p>ある関数の効果が実装定義(implementation-defined)である場合、その効果はC++標準規格で定義されず、C++実装はどのように実装してもよいという意味だ。</p>
+<h2 id="陪ラゲル多項式associated-laguerre-polynominals">陪ラゲル多項式(Associated Laguerre polynominals)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      assoc_laguerre(<span class="dt">unsigned</span> n, <span class="dt">unsigned</span> m, <span class="dt">double</span> x);
+<span class="dt">float</span>       assoc_laguerref(<span class="dt">unsigned</span> n, <span class="dt">unsigned</span> m, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span> assoc_laguerrel(<span class="dt">unsigned</span> n, <span class="dt">unsigned</span> m, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数n, m, xに対する陪ラゲル多項式(Associated Laguerre polynominals)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{L}_n^m(x) =
+  (-1)^m \frac{\mathsf{d} ^ m}
+       {\mathsf{d}x ^ m} \, \mathsf{L}_{n+m}(x),
+       \quad \mbox{for $x \ge 0$}
+\]</span></p>
+<p><span class="math inline">\(n\)</span>をn、<span class="math inline">\(m\)</span>をm、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：n &gt;= 128 もしくは m &gt;= 128 のときの関数呼び出しの効果は実装定義である。</p>
+<h2 id="sf.cmath.assoc_legendre">陪ルジャンドル関数(Associated Legendre functions)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      assoc_legendre(<span class="dt">unsigned</span> l, <span class="dt">unsigned</span> m, <span class="dt">double</span> x);
+<span class="dt">float</span>       assoc_legendref(<span class="dt">unsigned</span> l, <span class="dt">unsigned</span> m, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span> assoc_legendrel(<span class="dt">unsigned</span> l, <span class="dt">unsigned</span> m, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数l, m, xに対する 陪ルジャンドル関数(Associated Legendre functions)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{P}_\ell^m(x) =
+  (1 - x^2) ^ {m/2}
+  \:
+  \frac{ \mathsf{d} ^ m}
+       { \mathsf{d}x ^ m} \, \mathsf{P}_\ell(x),
+       \quad \mbox{for $|x| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(l\)</span>をl、<span class="math inline">\(m\)</span>をm、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：l &gt;= 128 のときの関数呼び出しの効果は実装定義である。</p>
+<h2 id="ベータ関数beta-function">ベータ関数(Beta function)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      beta(<span class="dt">double</span> x, <span class="dt">double</span> y);
+<span class="dt">float</span>       betaf(<span class="dt">float</span> x, <span class="dt">float</span> y);
+<span class="dt">long</span> <span class="dt">double</span> betal(<span class="dt">long</span> <span class="dt">double</span> x, <span class="dt">long</span> <span class="dt">double</span> y);</code></pre></div>
+<p>効果：実引数x, yに対するベータ関数(Beta function)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{B}(x, y) =
+  \frac{ \Gamma(x) \, \Gamma(y) }
+       { \Gamma(x+y) },
+       \quad \mbox{for $x &gt; 0$,\, $y &gt; 0$}
+\]</span></p>
+<p><span class="math inline">\(x\)</span>をx、<span class="math inline">\(y\)</span>をyとする。</p>
+<h2 id="第一種完全楕円積分complete-elliptic-integral-of-the-first-kind">第一種完全楕円積分(Complete elliptic integral of the first kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      comp_ellint_1(<span class="dt">double</span> k);
+<span class="dt">float</span>       comp_ellint_1f(<span class="dt">float</span> k);
+<span class="dt">long</span> <span class="dt">double</span> comp_ellint_1l(<span class="dt">long</span> <span class="dt">double</span> k);</code></pre></div>
+<p>効果：実引数kに対する第一種完全楕円積分(Complete elliptic integral of the first kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{K}(k) =
+  \mathsf{F}(k, \pi / 2),
+              \quad \mbox{for $|k| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(k\)</span>をkとする。</p>
+<p><a href="#sf.cmath.ellint_1">第一種不完全楕円積分</a>も参照。</p>
+<h2 id="第二種完全楕円積分complete-elliptic-integral-of-the-second-kind">第二種完全楕円積分(Complete elliptic integral of the second kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      comp_ellint_2(<span class="dt">double</span> k);
+<span class="dt">float</span>       comp_ellint_2f(<span class="dt">float</span> k);
+<span class="dt">long</span> <span class="dt">double</span> comp_ellint_2l(<span class="dt">long</span> <span class="dt">double</span> k);</code></pre></div>
+<p>効果：実引数kに対する第二種完全楕円積分(Complete elliptic integral of the second kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{E}(k) =
+  \mathsf{E}(k, \pi / 2),
+\quad \mbox{for $|k| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(k\)</span>をkとする。</p>
+<p><a href="#sf.cmath.ellint_2">第二種不完全楕円積分</a>も参照。</p>
+<h2 id="第三種完全楕円積分complete-elliptic-integral-of-the-third-kind">第三種完全楕円積分(Complete elliptic integral of the third kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>      comp_ellint_3(<span class="dt">double</span> k, <span class="dt">double</span> nu);
+<span class="dt">float</span>       comp_ellint_3f(<span class="dt">float</span> k, <span class="dt">float</span> nu);
+<span class="dt">long</span> <span class="dt">double</span> comp_ellint_3l(<span class="dt">long</span> <span class="dt">double</span> k, <span class="dt">long</span> <span class="dt">double</span> nu);</code></pre></div>
+<p>効果：実引数k, nuに対する第三種完全楕円積分(Complete elliptic integral of the third kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{\Pi}(\nu, k) = \mathsf{\Pi}(\nu, k, \pi / 2),
+        \quad \mbox{for $|k| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(k\)</span>をk、<span class="math inline">\(\nu\)</span>をnuとする。</p>
+<p><a href="#sf.cmath.ellint_3">第三種不完全楕円積分</a>も参照。</p>
+<h2 id="sf.cmath.cyl_bessel_i">正則変形円柱ベッセル関数(Regular modified cylindrical Bessel functions)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       cyl_bessel_i(<span class="dt">double</span> nu, <span class="dt">double</span> x);
+<span class="dt">float</span>        cyl_bessel_if(<span class="dt">float</span> nu, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  cyl_bessel_il(<span class="dt">long</span> <span class="dt">double</span> nu, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数nu, xに対する正則変形円柱ベッセル関数を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{I}_\nu(x) =
+  \mathrm{i}^{-\nu} \mathsf{J}_\nu(\mathrm{i}x)
+  =
+  \sum_{k=0}^\infty \frac{(x/2)^{\nu+2k}}
+             {k! \: \Gamma(\nu+k+1)},
+       \quad \mbox{for $x \ge 0$}
+\]</span></p>
+<p><span class="math inline">\(\nu\)</span>をnu、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：nu &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<p><a href="#sf.cmath.cyl_bessel_j">第一種円柱ベッセル関数</a>も参照。</p>
+<h2 id="sf.cmath.cyl_bessel_j">第一種円柱ベッセル関数(Cylindrical Bessel functions of the first kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       cyl_bessel_j(<span class="dt">double</span> nu, <span class="dt">double</span> x);
+<span class="dt">float</span>        cyl_bessel_jf(<span class="dt">float</span> nu, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  cyl_bessel_jl(<span class="dt">long</span> <span class="dt">double</span> nu, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数nu, kに対する第一種円柱ベッセル関数(Cylindrical Bessel functions of the first kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{J}_\nu(x) =
+  \sum_{k=0}^\infty \frac{(-1)^k (x/2)^{\nu+2k}}
+             {k! \: \Gamma(\nu+k+1)},
+       \quad \mbox{for $x \ge 0$}
+\]</span></p>
+<p><span class="math inline">\(\nu\)</span>をnu、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：nu &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<h2 id="非正則変形円柱ベッセル関数irregular-modified-cylindrical-bessel-functions">非正則変形円柱ベッセル関数(Irregular modified cylindrical Bessel functions)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       cyl_bessel_k(<span class="dt">double</span> nu, <span class="dt">double</span> x);
+<span class="dt">float</span>        cyl_bessel_kf(<span class="dt">float</span> nu, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  cyl_bessel_kl(<span class="dt">long</span> <span class="dt">double</span> nu, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数nu, xに対する非正則変形円柱ベッセル関数(Irregular modified cylindrical Bessel functions)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{K}_\nu(x) =
+  (\pi/2)\mathrm{i}^{\nu+1} (            \mathsf{J}_\nu(\mathrm{i}x)
+                + \mathrm{i} \mathsf{N}_\nu(\mathrm{i}x)
+                )
+  =
+  \left\{
+  \begin{array}{cl}
+  \displaystyle
+  \frac{\pi}{2}
+  \frac{\mathsf{I}_{-\nu}(x) - \mathsf{I}_{\nu}(x)}
+       {\sin \nu\pi },
+  &amp; \mbox{for $x \ge 0$ and non-integral $\nu$}
+  \\
+  \\
+  \displaystyle
+  \frac{\pi}{2}
+  \lim_{\mu \rightarrow \nu} \frac{\mathsf{I}_{-\mu}(x) - \mathsf{I}_{\mu}(x)}
+                                  {\sin \mu\pi },
+  &amp; \mbox{for $x \ge 0$ and integral $\nu$}
+  \end{array}
+  \right.
+\]</span></p>
+<p><span class="math inline">\(\nu\)</span>をnu、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：nu &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<p><a href="#sf.cmath.cyl_bessel_i">正則変形円柱ベッセル関数</a>、<a href="#sf.cmath.cyl_bessel_j">第一種円柱ベッセル関数</a>、<a href="#sf.cmath.cyl_neumann">円柱ノイマン関数</a>も参照。</p>
+<h2 id="sf.cmath.cyl_neumann">円柱ノイマン関数(Cylindrical Neumann functions)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       cyl_neumann(<span class="dt">double</span> nu, <span class="dt">double</span> x);
+<span class="dt">float</span>        cyl_neumannf(<span class="dt">float</span> nu, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  cyl_neumannl(<span class="dt">long</span> <span class="dt">double</span> nu, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数nu, xに対する円柱ノイマン関数(Cylindrical Neumann functions)、またの名を第二種円柱ベッセル関数(Cylindrical Bessel functions of the second kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{N}_\nu(x) =
+  \left\{
+  \begin{array}{cl}
+  \displaystyle
+  \frac{\mathsf{J}_\nu(x) \cos \nu\pi - \mathsf{J}_{-\nu}(x)}
+       {\sin \nu\pi },
+  &amp; \mbox{for $x \ge 0$ and non-integral $\nu$}
+  \\
+  \\
+  \displaystyle
+  \lim_{\mu \rightarrow \nu} \frac{\mathsf{J}_\mu(x) \cos \mu\pi - \mathsf{J}_{-\mu}(x)}
+                                {\sin \mu\pi },
+  &amp; \mbox{for $x \ge 0$ and integral $\nu$}
+  \end{array}
+  \right.
+\]</span></p>
+<p><span class="math inline">\(\nu\)</span>をnu、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：nu &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<p><a href="#sf.cmath.cyl_bessel_j">第一種円柱ベッセル関数</a>も参照。</p>
+<h2 id="sf.cmath.ellint_1">第一種不完全楕円積分(Incomplete elliptic integral of the first kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       ellint_1(<span class="dt">double</span> k, <span class="dt">double</span> phi);
+<span class="dt">float</span>        ellint_1f(<span class="dt">float</span> k, <span class="dt">float</span> phi);
+<span class="dt">long</span> <span class="dt">double</span>  ellint_1l(<span class="dt">long</span> <span class="dt">double</span> k, <span class="dt">long</span> <span class="dt">double</span> phi);</code></pre></div>
+<p>効果：実引数k, phi(phiの単位はラジアン)に対する第一種不完全楕円積分(Incomplete elliptic integral of the first kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{F}(k, \phi) =
+  \int_0^\phi \! \frac{\mathsf{d}\theta}
+                      {\sqrt{1 - k^2 \sin^2 \theta}},
+       \quad \mbox{for $|k| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(k\)</span>をk、<span class="math inline">\(\phi\)</span>をphiとする。</p>
+<h2 id="sf.cmath.ellint_2">第二種不完全楕円積分(Incomplete elliptic integroal of the second kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       ellint_2(<span class="dt">double</span> k, <span class="dt">double</span> phi);
+<span class="dt">float</span>        ellint_2f(<span class="dt">float</span> k, <span class="dt">float</span> phi);
+<span class="dt">long</span> <span class="dt">double</span>  ellint_2l(<span class="dt">long</span> <span class="dt">double</span> k, <span class="dt">long</span> <span class="dt">double</span> phi);</code></pre></div>
+<p>効果：実引数k, phi(phiの単位はラジアン)に対する第二種不完全楕円積分(Incomplete elliptic integral of the second kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{E}(k, \phi) =
+  \int_0^\phi \! \sqrt{1 - k^2 \sin^2 \theta} \, \mathsf{d}\theta,
+       \quad \mbox{for $|k| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(k\)</span>をk、<span class="math inline">\(\phi\)</span>をphiとする。</p>
+<h2 id="sf.cmath.ellint_3">第三種不完全楕円積分(Incomplete elliptic integral of the third kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       ellint_3(<span class="dt">double</span> k, <span class="dt">double</span> nu, <span class="dt">double</span> phi);
+<span class="dt">float</span>        ellint_3f(<span class="dt">float</span> k, <span class="dt">float</span> nu, <span class="dt">float</span> phi);
+<span class="dt">long</span> <span class="dt">double</span>  ellint_3l(<span class="dt">long</span> <span class="dt">double</span> k, <span class="dt">long</span> <span class="dt">double</span> nu, <span class="dt">long</span> <span class="dt">double</span> phi);</code></pre></div>
+<p>効果：実引数k, nu, phi(phiの単位はラジアン)に対する第三種不完全楕円積分(Incomplete elliptic integral of the third kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{\Pi}(\nu, k, \phi) =
+  \int_0^\phi \! \frac{ \mathsf{d}\theta }
+                      { (1 - \nu \, \sin^2 \theta) \sqrt{1 - k^2 \sin^2 \theta} },
+       \quad \mbox{for $|k| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(\nu\)</span>をnu、<span class="math inline">\(k\)</span>をk、<span class="math inline">\(\phi\)</span>をphiとする。</p>
+<h2 id="指数積分exponential-integral">指数積分(Exponential integral)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       expint(<span class="dt">double</span> x);
+<span class="dt">float</span>        expintf(<span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  expintl(<span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数xに対する指数積分(Exponential integral)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{Ei}(x) =
+  - \int_{-x}^\infty \frac{e^{-t}}
+                          {t     } \, \mathsf{d}t
+\;
+\]</span></p>
+<p><span class="math inline">\(x\)</span>をxとする。</p>
+<h2 id="エルミート多項式hermite-polynominals">エルミート多項式(Hermite polynominals)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       hermite(<span class="dt">unsigned</span> n, <span class="dt">double</span> x);
+<span class="dt">float</span>        hermitef(<span class="dt">unsigned</span> n, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  hermitel(<span class="dt">unsigned</span> n, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数n, xに対するエルミート多項式(Hermite polynominals)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{H}_n(x) =
+  (-1)^n e^{x^2} \frac{ \mathsf{d} ^n}
+              { \mathsf{d}x^n} \, e^{-x^2}
+\;
+\]</span></p>
+<p><span class="math inline">\(n\)</span>をn、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：n &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<h2 id="ラゲル多項式laguerre-polynomials">ラゲル多項式(Laguerre polynomials)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       laguerre(<span class="dt">unsigned</span> n, <span class="dt">double</span> x);
+<span class="dt">float</span>        laguerref(<span class="dt">unsigned</span> n, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  laguerrel(<span class="dt">unsigned</span> n, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数n, xに対するラゲル多項式(Laguerre polynominals)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{L}_n(x) =
+  \frac{e^x}{n!} \frac{ \mathsf{d} ^ n}
+            { \mathsf{d}x ^ n} \, (x^n e^{-x}),
+       \quad \mbox{for $x \ge 0$}
+\]</span></p>
+<p><span class="math inline">\(n\)</span>をn、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意： n &gt;= 128のときの関数の呼び出しの効果は実装定義である。</p>
+<h2 id="ルジャンドル多項式legendre-polynominals">ルジャンドル多項式(Legendre polynominals)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       legendre(<span class="dt">unsigned</span> l, <span class="dt">double</span> x);
+<span class="dt">float</span>        legendref(<span class="dt">unsigned</span> l, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  legendrel(<span class="dt">unsigned</span> l, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数l, xに対するルジャンドル多項式(Legendre polynominals)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{P}_\ell(x) =
+  \frac{1}
+       {2^\ell \, \ell!}
+  \frac{ \mathsf{d} ^ \ell}
+       { \mathsf{d}x ^ \ell} \, (x^2 - 1) ^ \ell,
+       \quad \mbox{for $|x| \le 1$}
+\]</span></p>
+<p><span class="math inline">\(l\)</span>をl、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：l &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<h2 id="リーマンゼータ関数riemann-zeta-function">リーマンゼータ関数(Riemann zeta function)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       riemann_zeta(<span class="dt">double</span> x);
+<span class="dt">float</span>        riemann_zetaf(<span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  riemann_zetal(<span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数xに対するリーマンゼータ関数(Riemann zeta function)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{\zeta}(x) =
+  \left\{
+  \begin{array}{cl}
+  \displaystyle
+  \sum_{k=1}^\infty k^{-x},
+  &amp; \mbox{for $x &gt; 1$}
+  \\
+  \\
+  \displaystyle
+  \frac{1}
+    {1 - 2^{1-x}}
+  \sum_{k=1}^\infty (-1)^{k-1} k^{-x},
+  &amp; \mbox{for $0 \le x \le 1$}
+  \\
+  \\
+  \displaystyle
+  2^x \pi^{x-1} \sin(\frac{\pi x}{2}) \, \Gamma(1-x) \, \zeta(1-x),
+  &amp; \mbox{for $x &lt; 0$}
+  \end{array}
+  \right.
+\;
+\]</span></p>
+<p><span class="math inline">\(x\)</span>をxとする。</p>
+<h2 id="第一種球面ベッセル関数spherical-bessel-functions-of-the-first-kind">第一種球面ベッセル関数(Spherical Bessel functions of the first kind)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       sph_bessel(<span class="dt">unsigned</span> n, <span class="dt">double</span> x);
+<span class="dt">float</span>        sph_besself(<span class="dt">unsigned</span> n, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  sph_bessell(<span class="dt">unsigned</span> n, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数n, xに対する第一種球面ベッセル関数(Spherical Bessel functions of the first kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{j}_n(x) =
+  (\pi/2x)^{1\!/\!2} \mathsf{J}_{n + 1\!/\!2}(x),
+       \quad \mbox{for $x \ge 0$}
+\]</span></p>
+<p>注意： n &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<p>[第一種円柱ベッセル関数][#sf.cmath.cyl_bessel_j]も参照。</p>
+<h2 id="球面陪ルジャンドル関数spherical-associated-legendre-functions">　球面陪ルジャンドル関数(Spherical associated Legendre functions)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       sph_legendre(<span class="dt">unsigned</span> l, <span class="dt">unsigned</span> m, <span class="dt">double</span> theta);
+<span class="dt">float</span>        sph_legendref(<span class="dt">unsigned</span> l, <span class="dt">unsigned</span> m, <span class="dt">float</span> theta);
+<span class="dt">long</span> <span class="dt">double</span>  sph_legendrel(<span class="dt">unsigned</span> l, <span class="dt">unsigned</span> m, <span class="dt">long</span> <span class="dt">double</span> theta);</code></pre></div>
+<p>効果：実引数l, m, theta(thetaの単位はラジアン)に対する 球面陪ルジャンドル関数(Spherical associated Legendre functions)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{Y}_\ell^m(\theta, 0)
+\]</span></p>
+<p>このとき、</p>
+<p><span class="math display">\[
+  \mathsf{Y}_\ell^m(\theta, \phi) =
+  (-1)^m \left[ \frac{(2 \ell + 1)}
+                     {4 \pi}
+            \frac{(\ell - m)!}
+                 {(\ell + m)!}
+         \right]^{1/2}
+     \mathsf{P}_\ell^m
+     ( \cos\theta ) e ^ {i m \phi},
+       \quad \mbox{for $|m| \le \ell$}
+\]</span></p>
+<p><span class="math inline">\(l\)</span>をl、<span class="math inline">\(m\)</span>をm、<span class="math inline">\(\theta\)</span>をthetaとする。</p>
+<p>注意：l &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<p><a href="#sf.cmath.assoc_legendre">陪ルジャンドル関数</a>も参照。</p>
+<h2 id="球面ノイマン関数spherical-neumann-functions">球面ノイマン関数(Spherical Neumann functions)</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">double</span>       sph_neumann(<span class="dt">unsigned</span> n, <span class="dt">double</span> x);
+<span class="dt">float</span>        sph_neumannf(<span class="dt">unsigned</span> n, <span class="dt">float</span> x);
+<span class="dt">long</span> <span class="dt">double</span>  sph_neumannl(<span class="dt">unsigned</span> n, <span class="dt">long</span> <span class="dt">double</span> x);</code></pre></div>
+<p>効果：実引数n, xに対する球面ノイマン関数(Spherical Neumann functions)、またの名を第二種球面ベッセル関数(Spherical Bessel functions of the second kind)を計算する。</p>
+<p>戻り値：</p>
+<p><span class="math display">\[
+  \mathsf{n}_n(x) =
+  (\pi/2x)^{1\!/\!2} \mathsf{N}_{n + 1\!/\!2}(x),
+       \quad \mbox{for $x \ge 0$}
+\]</span></p>
+<p><span class="math inline">\(n\)</span>をn、<span class="math inline">\(x\)</span>をxとする。</p>
+<p>注意：n &gt;= 128 のときの関数の呼び出しの効果は実装定義である。</p>
+<p><a href="#sf.cmath.cyl_neumann">円柱ノイマン関数</a>も参照。</p>
 </body>
 </html>
