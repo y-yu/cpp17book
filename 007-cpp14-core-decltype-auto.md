@@ -163,18 +163,6 @@ int main()
 }
 ~~~
 
-autoはトップレベルのCV修飾子を消すが、decltype(auto)は保持する。
-
-~~~cpp
-int main()
-{
-    // int
-    auto x1 = f() ;
-    // int &
-    decltype(auto) x2 = f() ;
-}
-~~~
-
 リスト初期化はautoではstd::initializer_listだが、decltype(auto)では式ではないためエラー
 
 ~~~c++
@@ -224,6 +212,6 @@ decltype(auto) f( int & ref )
 []() -> decltype(auto) { return 0 ; } ;
 ~~~
 
-decltype(auto)は主に関数の戻り地の型推定で式の型をそのまま推定してくれるようにするために追加された機能だ。その利用にはC++の型システムの深い理解が必要になる。
+decltype(auto)は主に関数の戻り値の型推定で式の型をそのまま推定してくれるようにするために追加された機能だ。その利用にはC++の型システムの深い理解が必要になる。
 
 機能テストマクロは__cpp_decltype_auto, 値は201304。

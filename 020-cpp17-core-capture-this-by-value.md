@@ -65,7 +65,7 @@ public :
     closure_object( X * this_ptr )
         : this_ptr(this_ptr) { }
 
-    void operator () const
+    void operator () () const
     {
         this_ptr->data = 1 ;
     }
@@ -73,8 +73,6 @@ public :
 ~~~
 
 二番目のラムダ式では以下のようなクロージャーオブジェクトが生成される。
-
-
 
 ~~~cpp
 class closure_object
@@ -86,16 +84,16 @@ public :
     closure_object( X const & this_obj )
         : this_obj(this_obj) { }
 
-    void operator () const
+    void operator () () const
     {
-        this_ptr->data = 1 ;
+        this_ptr->data = 2 ;
     }
 } ;
 ~~~
 
-三番目のラムダ式では以下のようなクロージャーオブジェクトが生成される。
-
 これはC++の文法に従っていないのでやや苦しいコード例だが、コピーキャプチャーされた値を変更しようとしているためエラーとなる。
+
+三番目のラムダ式では以下のようなクロージャーオブジェクトが生成される。
 
 ~~~cpp
 class closure_object
@@ -107,7 +105,7 @@ public :
     closure_object( X const & this_obj )
         : this_obj(this_obj) { }
 
-    void operator ()
+    void operator () ()
     {
         this_ptr->data = 2 ;
     }

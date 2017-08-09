@@ -6,11 +6,11 @@ C++17で追加された構造化束縛は多値を分解して受け取るため
 int main()
 {
     int a[] = { 1,2,3 } ;
-    auto [a,b,c] = a ;
+    auto [b,c,d] = a ;
 
-    // a == 1
-    // b == 2
-    // c == 3
+    // b == 1
+    // c == 2
+    // d == 3
 }
 ~~~
 
@@ -193,7 +193,7 @@ int main()
 ~~~c++
 int main()
 {
-    int expr[] = { 1,2 } ;
+    constexpr int expr[] = { 1,2 } ;
 
     // エラー
     constexpr auto [a,b] = expr ;
