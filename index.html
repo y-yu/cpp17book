@@ -324,7 +324,36 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#その他の標準ライブラリ">その他の標準ライブラリ</a><ul>
 <li><a href="#ハードウェア干渉サイズキャッシュライン">ハードウェア干渉サイズ(キャッシュライン)</a></li>
 <li><a href="#stduncaught_exceptions">std::uncaught_exceptions</a></li>
-<li><a href="#関数にtupleの中身を実引数に渡して呼ぶapply">関数にtupleの中身を実引数に渡して呼ぶapply</a></li>
+<li><a href="#apply-tupleの要素を実引数に関数を呼び出す">apply: tupleの要素を実引数に関数を呼び出す</a></li>
+<li><a href="#searcher-検索">Searcher : 検索</a><ul>
+<li><a href="#default_searcher">default_searcher</a></li>
+<li><a href="#boyer_moore_searcher">boyer_moore_searcher</a></li>
+<li><a href="#boyer_moore_horspool_searcher">boyer_moore_horspool_searcher</a></li>
+</ul></li>
+<li><a href="#sample-乱択アルゴリズム">sample: 乱択アルゴリズム</a><ul>
+<li><a href="#乱択アルゴリズム">乱択アルゴリズム</a></li>
+<li><a href="#アルゴリズムs選択標本要素数が分かっている集合からの標本の選択">アルゴリズムS：選択標本、要素数が分かっている集合からの標本の選択</a></li>
+<li><a href="#アルゴリズムr保管標本要素数がわからない集合からの標本の選択">アルゴリズムR：保管標本、要素数がわからない集合からの標本の選択</a></li>
+<li><a href="#cのsample">C++のsample</a></li>
+</ul></li>
+<li><a href="#shared_ptr-配列に対するshared_ptr">shared_ptr<T[]> : 配列に対するshared_ptr</a></li>
+<li><a href="#as_const-const性の付与">as_const: const性の付与</a></li>
+<li><a href="#make_from_tuple-tupleの要素を実引数にコンストラクターを呼び出す">make_from_tuple : tupleの要素を実引数にコンストラクターを呼び出す</a></li>
+<li><a href="#invoke-指定した関数を指定した実引数で呼び出す">invoke : 指定した関数を指定した実引数で呼び出す</a></li>
+<li><a href="#not_fn-戻り値の否定ラッパー">not_fn : 戻り値の否定ラッパー</a></li>
+<li><a href="#メモリー管理アルゴリズム">メモリー管理アルゴリズム</a><ul>
+<li><a href="#addressof">addressof</a></li>
+<li><a href="#uninitialized_default_construct">uninitialized_default_construct</a></li>
+<li><a href="#uninitialized_value_construct">uninitialized_value_construct</a></li>
+<li><a href="#uninitialized_copy">uninitialized_copy</a></li>
+<li><a href="#uninitialized_move">uninitialized_move</a></li>
+<li><a href="#uninitialized_fill">uninitialized_fill</a></li>
+<li><a href="#destory">destory</a></li>
+</ul></li>
+<li><a href="#shared_ptrweak_type">shared_ptr::weak_type</a></li>
+<li><a href="#void_t">void_t</a></li>
+<li><a href="#bool_constant">bool_constant</a></li>
+<li><a href="#変数テンプレート版のtraits">変数テンプレート版のtraits</a></li>
 </ul></li>
 </ul>
 </div>
@@ -1398,7 +1427,7 @@ T f( T x ) { <span class="cf">return</span> x ; }
 <h2 id="文字列なしstatic_assert">文字列なしstatic_assert</h2>
 <p>C++17ではstatic_assertに文字列リテラルをとらないものが追加された。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">static_assert</span>( <span class="kw">true</span> ) ;</code></pre></div>
-<p>C++11で追加されたstatic_asserには、文字列リテラルが必須だった。</p>
+<p>C++11で追加されたstatic_assertには、文字列リテラルが必須だった。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">static_assert</span>( <span class="kw">true</span>, <span class="st">&quot;this shall not be asserted.&quot;</span>) ;</code></pre></div>
 <p>特に文字列を指定する必要がない場合もあるので、文字列リテラルを取らないstatic_assertが追加された。</p>
 <p>機能テストマクロは__cpp_static_assert, 値は201411。</p>
@@ -1423,7 +1452,7 @@ T f( T x ) { <span class="cf">return</span> x ; }
 <p>switch文では対応するcaseラベルに処理が移る。通常、以下のように書く。</p>
 <div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">void</span> f( <span class="dt">int</span> x )
 {
-    swtich ( x )
+    <span class="cf">switch</span> ( x )
     {
     <span class="cf">case</span> <span class="dv">0</span> :
         <span class="co">// 処理0</span>
@@ -5384,19 +5413,665 @@ monotonic_buffer_resource(<span class="dt">void</span> *buffer, <span class="dt"
     }
 
 }</code></pre></div>
-<h2 id="関数にtupleの中身を実引数に渡して呼ぶapply">関数にtupleの中身を実引数に渡して呼ぶapply</h2>
-<p>applyは関数にtupleの中身を実引数に渡して呼ぶライブラリだ。</p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+<h2 id="apply-tupleの要素を実引数に関数を呼び出す">apply: tupleの要素を実引数に関数を呼び出す</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> F, <span class="kw">class</span> Tuple&gt;
+<span class="kw">constexpr</span> <span class="kw">decltype</span>(<span class="kw">auto</span>) apply(F&amp;&amp; f, Tuple&amp;&amp; t);</code></pre></div>
+<p>std::applyはtupleのそれぞれの要素を順番に実引数に渡して関数を呼び出すヘルパー関数だ。</p>
+<p>ある要素数Nのtuple tと関数オブジェクトfに対して、apply( f, t )は、f( get&lt;0&gt;(t), get&lt;1&gt;(t), ... , get<N>(t) )のようにfを関数呼び出しする。</p>
+<p>例</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt; <span class="kw">typename</span> ... Types &gt;
+<span class="dt">void</span> f( Types ... args ) { }
+
+<span class="dt">int</span> main()
 {
-    <span class="kw">auto</span> f = [](<span class="dt">int</span>, <span class="dt">double</span>, <span class="bu">std::</span>string){} ;
+    <span class="co">// int, int, int</span>
+    <span class="bu">std::</span>tuple t1( <span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span> ) ;
+
+    <span class="co">// f( 1, 2, 3 )の関数呼び出し</span>
+    <span class="bu">std::</span>apply( f, t1 ) ;
 
     <span class="co">// int, double, const char *</span>
-    <span class="bu">std::</span>tuple t( <span class="dv">1</span>, <span class="fl">2.0</span>, <span class="st">&quot;hello&quot;</span> ) ;
+    <span class="bu">std::</span>tuple t2( <span class="dv">123</span>, <span class="fl">4.56</span>, <span class="st">&quot;hello&quot;</span>) ;
 
-    <span class="co">// f( std::get&lt;0&gt;(t), std::get&lt;1&gt;(t), std::get&lt;2&gt;(t) )と同じ</span>
-    <span class="co">// つまり、f( 1, 2.0, &quot;hello&quot; )と同じ</span>
-    <span class="bu">std::</span>apply( f, t ) ;
+    <span class="co">// f( 123, 4.56, &quot;hello&quot; )の関数呼び出し</span>
+    <span class="bu">std::</span>apply( f, t2 ) ;
 }</code></pre></div>
-<p>このように、apply( f, t )は、関数オブジェクトfに対して、tuple tの要素を順番にfの実引数に渡してfを呼び出す。</p>
+<h2 id="searcher-検索">Searcher : 検索</h2>
+<p>C++17では&lt;functional&gt;にsearcherというライブラリが追加された。これは順序のあるオブジェクトの集合に、ある部分集合(パターン)が含まれているかどうかを検索するためのライブラリだ。その最も一般的な応用例は文字列検索となる。</p>
+<p>searcherの基本的な設計としては、クラスのオブジェクトを構築して、コンストラクターで検索したい部分集合(パターン)を与え、operator ()で部分集合が含まれているかを検索したい集合を与える。</p>
+<p>この設計のライブラリが追加された理由は、パターンの検索のために何らかの事前の準備を状態として保持しておきたい検索アルゴリズムを実装するためだ。</p>
+<h3 id="default_searcher">default_searcher</h3>
+<p>クラスstd::default_searcherは以下のように宣言されている。</p>
+<p>~~c++ template &lt; class ForwardIterator1, class BinaryPredicate = equal_to&lt;&gt; &gt; class default_searcher { public: // コンストラクター default_searcher( ForwardIterator1 pat_first, ForwardIterator1 pat_last , BinaryPredicate pred = BinaryPredicate() ) ;</p>
+<pre><code>// operator ()
+template &lt;class ForwardIterator2&gt;
+pair&lt;ForwardIterator2, ForwardIterator2&gt;
+operator()(ForwardIterator2 first, ForwardIterator2 last) const ;</code></pre>
+<p>} ; <sub>~</sub></p>
+<p>コンストラクターで部分集合を受け取る。operator ()で集合を受け取り、部分集合(パターン)と一致した場所をイテレーターのペアで返す。見つからない場合、イテレーターのペアは[last, last)になっている。</p>
+<p>以下のように使う。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>string pattern(<span class="st">&quot;fox&quot;</span>) ;
+    <span class="bu">std::</span>default_searcher fox_searcher( <span class="bu">std::</span>begin(pattern), <span class="bu">std::</span>end(pattern) ) ;
+
+    <span class="bu">std::</span>string corpus = <span class="st">&quot;The quick brown fox jumps over the lazy dog&quot;</span> ;
+
+    <span class="kw">auto</span>[first, last] = fox_searcher( <span class="bu">std::</span>begin(s), <span class="bu">std::</span>end(s) ) ;
+    <span class="bu">std::</span>string fox( first, last ) ;
+}</code></pre></div>
+<p>default_searcherの検索は、内部的にstd::searchが使われる。</p>
+<h3 id="boyer_moore_searcher">boyer_moore_searcher</h3>
+<p>std::boyer_moore_searcherはBoyer-Moore文字列検索アルゴリズムを使って部分集合の検索を行う。</p>
+<p>Boyer-Moore文字列検索アルゴリズムは極めて効率的な文字列検索のアルゴリズムだ。Boyer-MooreアルゴリズムはBob BoyerとStrother Mooreによって発明され、1977年のCommunications of the ACMで発表された。その内容は以下のURLで読むことができる。</p>
+<p><a href="http://www.cs.utexas.edu/~moore/publications/fstrpos.pdf" class="uri">http://www.cs.utexas.edu/~moore/publications/fstrpos.pdf</a></p>
+<p>愚直に実装した文字列検索アルゴリズムは検索すべき部分文字列(パターン)を検索対象の文字列(コーパス)から探す際、パターンの先頭の文字をコーパスの先頭から順に探していき、見つかれば2文字目以降も一致するかどうかを調べる。</p>
+<p>Boyer-Mooreアルゴリズムはパターンの末尾の文字から調べる。文字が一致しなければ、パターンから絶対に不一致であると分かっている長さだけの文字を比較せずに読み飛ばす。これによって効率的な文字列検索を実現している。</p>
+<p>Boyer-Mooreアルゴリズムは事前にパターンのどの文字が不一致ならば何文字比較せずに読み飛ばせるかという情報を計算した二つのテーブルを生成する必要がある。このため、Boyer-Mooreアルゴリズムはメモリ使用量と検索前の準備時間というコストがかかる。そのコストは、より効率的な検索により相殺できる。特に、パターンが長い場合は効果的だ。</p>
+<p>C++17に入るBoyer_mooreアルゴリズムに基づく検索は、テンプレートを使った汎用的なchar型のような状態数の少ない型に対して</p>
+<p>クラスboyer_moore_searcherは以下のように宣言されている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt; <span class="kw">class</span> RandomAccessIterator1,
+            <span class="kw">class</span> Hash = hash&lt;<span class="kw">typename</span> iterator_traits&lt;RandomAccessIterator1&gt;::<span class="dt">value_type</span>&gt;,
+            <span class="kw">class</span> BinaryPredicate = equal_to&lt;&gt; &gt;
+<span class="kw">class</span> boyer_moore_searcher {
+<span class="kw">public</span>:
+    <span class="co">// コンストラクター</span>
+    boyer_moore_searcher(
+        RandomAccessIterator1 pat_first, RandomAccessIterator1 pat_last,
+        Hash hf = Hash(),
+        BinaryPredicate pred = BinaryPredicate() ) ;
+
+    <span class="co">// operator ()</span>
+    <span class="kw">template</span> &lt;<span class="kw">class</span> RandomAccessIterator2&gt;
+    pair&lt;RandomAccessIterator2, RandomAccessIterator2&gt;
+    <span class="kw">operator</span>()(RandomAccessIterator2 first, RandomAccessIterator2 last) <span class="at">const</span>;
+} ;</code></pre></div>
+<p>boyer_moore_searcheは、文字列以外にも適用できる汎用的な設計のため、ハッシュ関数を取る。char型のような取りうる状態数の少ない型以外が渡された場合は、std::unordered_mapのようなメモリ使用量を削減できる何らかのデータ構造を使ってテーブルを構築する。</p>
+<p>使い方はdefault_searcherとほとんど変わらない。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>string pattern(<span class="st">&quot;fox&quot;</span>) ;
+    <span class="bu">std::</span>boyer_moore_searcher fox_searcher( <span class="bu">std::</span>begin(pattern), <span class="bu">std::</span>end(pattern) ) ;
+
+    <span class="bu">std::</span>string corpus = <span class="st">&quot;The quick brown fox jumps over the lazy dog&quot;</span> ;
+
+    <span class="kw">auto</span>[first, last] = fox_searcher( <span class="bu">std::</span>begin(s), <span class="bu">std::</span>end(s) ) ;
+    <span class="bu">std::</span>string fox( first, last ) ;
+}</code></pre></div>
+<h3 id="boyer_moore_horspool_searcher">boyer_moore_horspool_searcher</h3>
+<p>std::boyer_moore_horspool_searcherはBoyer-Moore-Horspool検索アルゴリズムを使って部分集合の検索を行う。Boyer_Moore-HorspoolアルゴリズムはNigel Horspoolによって1980年に発表された。</p>
+<p>参考: &quot;Practical fast searching in strings&quot; 1980</p>
+<p>Boyer-Moore-Horspoolアルゴリズムは内部テーブルに使うメモリー使用量を削減しているが、最悪計算量の点でオリジナルのBoyer-Mooreアルゴリズムには劣っている。つまり、実行時間の増大を犠牲にしてメモリ使用量を削減したトレードオフなアルゴリズムと言える。</p>
+<p>クラスboyer_moore_horspool_searcherの宣言は以下の通り。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;  <span class="kw">class</span> RandomAccessIterator1,
+            <span class="kw">class</span> Hash = hash&lt;<span class="kw">typename</span> iterator_traits&lt;RandomAccessIterator1&gt;::<span class="dt">value_type</span>&gt;,
+            <span class="kw">class</span> BinaryPredicate = equal_to&lt;&gt; &gt;
+<span class="kw">class</span> boyer_moore_horspool_searcher {
+<span class="kw">public</span>:
+    <span class="co">// コンストラクター</span>
+    boyer_moore_horspool_searcher(
+        RandomAccessIterator1 pat_first, RandomAccessIterator1 pat_last,
+        Hash hf = Hash(),
+        BinaryPredicate pred = BinaryPredicate() );
+
+    <span class="co">// operator () </span>
+    <span class="kw">template</span> &lt;<span class="kw">class</span> RandomAccessIterator2&gt;
+    pair&lt;RandomAccessIterator2, RandomAccessIterator2&gt;
+    <span class="kw">operator</span>()(RandomAccessIterator2 first, RandomAccessIterator2 last) <span class="at">const</span>;
+} ;</code></pre></div>
+<p>使い方はboyer_moore_horspool_searcherと変わらない。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>string pattern(<span class="st">&quot;fox&quot;</span>) ;
+    <span class="bu">std::</span>boyer_moore_horspool_searcher fox_searcher( <span class="bu">std::</span>begin(pattern), <span class="bu">std::</span>end(pattern) ) ;
+
+    <span class="bu">std::</span>string corpus = <span class="st">&quot;The quick brown fox jumps over the lazy dog&quot;</span> ;
+
+    <span class="kw">auto</span>[first, last] = fox_searcher( <span class="bu">std::</span>begin(s), <span class="bu">std::</span>end(s) ) ;
+    <span class="bu">std::</span>string fox( first, last ) ;
+}</code></pre></div>
+<h2 id="sample-乱択アルゴリズム">sample: 乱択アルゴリズム</h2>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;  <span class="kw">class</span> PopulationIterator, <span class="kw">class</span> SampleIterator,
+            <span class="kw">class</span> Distance, <span class="kw">class</span> UniformRandomBitGenerator &gt;
+
+SampleIterator sample(
+    PopulationIterator first, PopulationIterator last,
+    SampleIterator out,
+    Distance n, UniformRandomBitGenerator&amp;&amp; g) ;</code></pre></div>
+<p>C++17で&lt;algorithm&gt;に追加されたstd::sampleは、標本を確率的に選択するための乱択アルゴリズムだ。</p>
+<p>[first, last)は標本を選択する先の集合を指すイテレーター。outは標本を出力する先のイテレーター。nは選択する標本の個数。gは標本を選択するのに使う乱数生成器。戻り値はout。</p>
+<p>ある要素の集合から、n個の要素を確率的に公平に選択したい場合に使うことができる。</p>
+<h3 id="乱択アルゴリズム">乱択アルゴリズム</h3>
+<p>std::sampleを使う前に、まず正しい乱択アルゴリズムについて学ぶ必要がある。乱択アルゴリズムについて詳しくは、Donald E. KnuthのThe Arf of Computer Programming(以下TAOCP、邦訳はアスキードワンゴから同名の書名で出版されている)を参照。</p>
+<p>ユーザーからの入力、計測した気象情報のデータ、サーバーへのアクセスログなど、世の中には膨大な量のデータが存在する。これらの膨大なデータをすべて処理するのではなく、標本を採取することによって、統計的にそれなりに信頼できる確率で正しい全体のデータを推定することができる。そのためにはn個の標本をバイアスがかからない方法で選択する必要がある。バイアスのかからない方法でn個の標本を取り出すには、集合の先頭からn個とか、一つおきにn個といった方法で選択してはならない。それはバイアスがかかっている。</p>
+<p>ある値の集合から、バイアスのかかっていないn個の標本を得るには、集合のすべての値が等しい確率で選ばれた上でn個を選択しなければならない。一体どうすればいいのだろうか。</p>
+<p>std::sampleを使えば、100個の値から10個の標本を得るのは、以下のように書くことが可能だ。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="co">// 100個の値の集合</span>
+    <span class="bu">std::</span>vector&lt;<span class="dt">int</span>&gt; pop(<span class="dv">100</span>) ;
+    <span class="bu">std::</span>iota( <span class="bu">std::</span>begin(pop), <span class="bu">std::</span>end(pop), <span class="dv">0</span> ) ;
+
+    <span class="co">// 標本を格納するコンテナー</span>
+    <span class="bu">std::</span>vector&lt;<span class="dt">int</span>&gt; out(<span class="dv">10</span>) ;
+
+    <span class="co">// 乱数生成器</span>
+    <span class="bu">std::</span>array&lt;<span class="bu">std::</span>uint32_t, <span class="kw">sizeof</span>(<span class="bu">std::</span>knuth_b)/<span class="dv">4</span>&gt; a ;
+    <span class="bu">std::</span>random_device r ;
+    <span class="bu">std::</span>generate( <span class="bu">std::</span>begin( a ), <span class="bu">std::</span>end(a), [&amp;]{ <span class="cf">return</span> r() ; } ) ;
+    <span class="bu">std::</span>seed_seq seed( <span class="bu">std::</span>begin(a), <span class="bu">std::</span>end(a) ) ;
+    <span class="bu">std::</span>knuth_b g( seed ) ;
+
+    <span class="co">// 10個の標本を得る。</span>
+    sample( <span class="bu">std::</span>begin(pop), <span class="bu">std::</span>end(pop), <span class="bu">std::</span>begin(out), <span class="dv">10</span>, g ) ;
+
+    <span class="co">// 標本を出力</span>
+    <span class="bu">std::</span>copy( <span class="bu">std::</span>begin(out), <span class="bu">std::</span>end(out), <span class="bu">std::</span>ostream_iterator&lt;<span class="dt">int</span>&gt;(<span class="bu">std::</span>cout, <span class="st">&quot;, &quot;</span>) ) ;
+}</code></pre></div>
+<p>集合に含まれる値の数がN個だと分かっているならば、それぞれの値について<span class="math inline">\(n/m\)</span>の確率で選ぶというのはどうだろうか。100個中10個を選ぶのであれば、<span class="math inline">\(1/10\)</span>の確率でそれぞれの値を標本として選択することになる。</p>
+<p>この考えに基づく乱択アルゴリズムは以下のようになる。</p>
+<ol style="list-style-type: decimal">
+<li>集合の要素数をN、選択すべき標本の数をn、iを0とする。</li>
+<li>0ベースインデックスでi番目の値を<span class="math inline">\(n/m\)</span>の確率で標本として選択する</li>
+<li>iをインクリメントする</li>
+<li>i != Nならばgoto 2.</li>
+</ol>
+<p>このアルゴリズムをコードで書くと以下のようになる。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;  <span class="kw">class</span> PopulationIterator, <span class="kw">class</span> SampleIterator,
+            <span class="kw">class</span> Distance, <span class="kw">class</span> UniformRandomBitGenerator &gt;
+SampleIterator sample(
+    PopulationIterator first, PopulationIterator last,
+    SampleIterator out,
+    Distance n, UniformRandomBitGenerator&amp;&amp; g)
+{
+    <span class="kw">auto</span> N = <span class="bu">std::</span>distance( first, last ) ;
+
+    <span class="co">// 確率n/Nでtrueを返すベルヌーイ分布</span>
+    <span class="dt">double</span> probability = <span class="dt">double</span>(n)/<span class="dt">double</span>(N) ;
+    <span class="bu">std::</span>bernoulli_distribution d( probability ) ;
+
+    <span class="co">// それぞれの値に対して</span>
+    <span class="bu">std::</span>for_each( first, last,
+        [&amp;]( <span class="kw">auto</span> &amp;&amp; value )
+        {
+            <span class="cf">if</span> ( d(g) )
+            {<span class="co">// n/Nの確率で標本として選択する</span>
+                *out = value ;
+                ++out ;
+            }
+        } ) ;
+
+    <span class="cf">return</span> out ;
+}</code></pre></div>
+<p>残念ながらこのアルゴリズムは正しく動かない。この例では、100個の値の集合から10個の標本を選択したい。しかし、選ばれる標本の数はプログラムの実行ごとに異なる。このアルゴリズムは、標本の数が平均的に10個選ばれることが期待できるが、運が悪いと0個や100個の標本が選ばれてしまう可能性がある。</p>
+<p>ちなみに、TAOCP Vol.2によれば、このとき選ばれる標本数の標準偏差は<span class="math inline">\(\sqrt{n(1-n/N)}\)</span>になる。</p>
+<p>正しいアルゴリズムは、要素の集合のうちの<span class="math inline">\((t+1)\)</span>番目の要素は、すでにm個の要素が標本として選ばれたとき、<span class="math inline">\((n-m)(N-t)\)</span>の確率で選ぶものだ。</p>
+<h3 id="アルゴリズムs選択標本要素数が分かっている集合からの標本の選択">アルゴリズムS：選択標本、要素数が分かっている集合からの標本の選択</h3>
+<p>KnuthのTAOCP Vol.2では、アルゴリズムSと称して、要素数の分かっている集合から標本を選択する方法を解説している。</p>
+<p>アルゴリズムRは以下の通り。</p>
+<p><span class="math inline">\(0 &lt; n \leq N\)</span> のとき、N個の集合からn個の標本をランダムに選択する。</p>
+<ol style="list-style-type: decimal">
+<li>t, mを0とする。tはこれまでに処理した要素数、mは標本として選択した要素数とする。</li>
+<li><span class="math inline">\(0 \leq U \leq N - t\)</span>の範囲の乱数Uを生成する</li>
+<li><span class="math inline">\(U \geq n - m\)</span>であればgoto 5.</li>
+<li>次の要素を標本として選択する。mとtをインクリメントする。<span class="math inline">\(m &lt; n\)</span>であれば、goto 2. そうでなければ標本は完了したのでアルゴリズムは終了する</li>
+<li>次の要素を標本として選択しない。tをインクリメントする。goto 2.</li>
+</ol>
+<p>実装は以下のようになる。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;  <span class="kw">class</span> PopulationIterator, <span class="kw">class</span> SampleIterator,
+            <span class="kw">class</span> Distance, <span class="kw">class</span> UniformRandomBitGenerator &gt;
+SampleIterator
+sample_s(
+    PopulationIterator first, PopulationIterator last,
+    SampleIterator out,
+    Distance n, UniformRandomBitGenerator&amp;&amp; g)
+{
+    <span class="co">// 1.</span>
+    Distance t = <span class="dv">0</span> ;
+    Distance m = <span class="dv">0</span> ;
+    <span class="at">const</span> <span class="kw">auto</span> N = <span class="bu">std::</span>distance( first, last ) ;
+
+    <span class="kw">auto</span> r = [&amp;]{
+        <span class="bu">std::</span>uniform_int_distribution&lt;&gt; d(<span class="dv">0</span>, N-t) ;
+        <span class="cf">return</span> d(g) ;
+    } ;
+
+    <span class="cf">while</span> ( m &lt; n  &amp;&amp; first != last )
+    {
+        <span class="co">// 2. 3.</span>
+        <span class="cf">if</span> ( r() &gt;= n - m )
+        {<span class="co">// 5.</span>
+            ++t ;
+            ++first ;
+        }
+        <span class="cf">else</span> { <span class="co">// 4.</span>
+            *out = *first ;
+            ++first ; ++out ;
+            ++m ; ++t ;
+        }
+    }
+    
+    <span class="cf">return</span> out ;
+}</code></pre></div>
+<h3 id="アルゴリズムr保管標本要素数がわからない集合からの標本の選択">アルゴリズムR：保管標本、要素数がわからない集合からの標本の選択</h3>
+<p>アルゴリズムSは集合の要素数がN個であると分かっている場合に、n個の標本を選択するアルゴリズムだ。では、もしNがわからない場合はどうすればいいのだろうか。</p>
+<p>現実にはNがわからない状況がよくある。</p>
+<ul>
+<li>ユーザーからの入力</li>
+<li>シーケンシャルアクセスしか提供しておらず全部読み込まなければ要素数のわからないテープデバイスからの入力</li>
+<li>ガイガーカウンターからの入力</li>
+</ul>
+<p>このような要素数のわからない入力にアルゴリズムSを適用するには、まず一度全部入力を得て、全体の要素数を確定させた上で、全要素に対してアルゴリズムSを適用させるという2段階の方法を使うことができる。</p>
+<p>しかし、1段階の要素の巡回だけで済ませたい。要素数のわからない入力を処理して、その時点で公平に選択された標本を得たい。</p>
+<p>アルゴリズムRはそのような状況で使えるアルゴリズムだ。</p>
+<p>アルゴリズムRでは、要素数のわからない要素の集合からn個の標本を選択する。そのために標本として選択した要素を保管しておき、新しい入力が与えられるたびに、標本として選択するかどうかの判断をし、選択をするのであれば、保管しておいた既存の標本と置き換える。</p>
+<p>アルゴリズムRは以下の通り(このアルゴリズムはknuth本とは違う)</p>
+<p><span class="math inline">\(n &gt; 0\)</span>のとき、<span class="math inline">\(size \geq n\)</span>である未確定のsize個の要素数をもつ入力から、n個の標本をランダムに選択する。標本の候補はn個まで保管される。<span class="math inline">\(1 \geq j \geq n\)</span>のときI[j]は保管された標本を指す。</p>
+<ol style="list-style-type: decimal">
+<li>入力から最初のn個を標本として選択し、保管する。<span class="math inline">\(1 &lt; j \geq n\)</span>の範囲でI[j]にj番目の標本を保管する。tの値をnとする。I[1], ..., I[n]は現在の標本を指す。tは現在処理した入力の個数を指す。</li>
+<li>入力の終わりであればアルゴリズムを終了する</li>
+<li>tをインクリメントする。<span class="math inline">\(1 \leq M \leq t\)</span>の範囲の乱数Mを生成する。<span class="math inline">\(M &gt; n\)</span> ならばgoto 5.</li>
+<li>次の入力をI[M]に保管する。goto 2.</li>
+<li>次の入力を保管しない。goto 2.</li>
+</ol>
+<p>実装は以下のようになる。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;  <span class="kw">class</span> PopulationIterator, <span class="kw">class</span> SampleIterator,
+            <span class="kw">class</span> Distance, <span class="kw">class</span> UniformRandomBitGenerator &gt;
+
+SampleIterator sample_r(
+    PopulationIterator first, PopulationIterator last,
+    SampleIterator out,
+    Distance n, UniformRandomBitGenerator&amp;&amp; g)
+{
+    Distance t = <span class="dv">0</span> ;
+
+    <span class="kw">auto</span> result = out ;
+
+    <span class="cf">for</span> ( ; (first != last) &amp;&amp; (t != n) ; ++first, ++t, ++result  )
+    {
+        out[t] = *first ;
+    }
+
+    <span class="cf">if</span> ( t != n )
+        <span class="cf">return</span> result ;
+
+
+    <span class="kw">auto</span> I = [&amp;](Distance j) -&gt; <span class="kw">decltype</span>(<span class="kw">auto</span>) { <span class="cf">return</span> out[j<span class="dv">-1</span>] ;} ;
+
+    <span class="cf">while</span> ( first != last )
+    {
+        ++t ;
+        <span class="bu">std::</span>uniform_int_distribution&lt;Distance&gt; d( <span class="dv">1</span>, t ) ;
+        <span class="kw">auto</span> M = d(g) ;
+
+        <span class="cf">if</span> ( M &gt; n )
+        {
+            ++first ;
+        }
+        <span class="cf">else</span> {
+            I(M) = *first ;
+            ++first ;
+        }
+    }
+
+    <span class="cf">return</span> result ;
+}</code></pre></div>
+<h3 id="cのsample">C++のsample</h3>
+<p>個々まで説明したように、乱択アルゴリズムには2種類ある。入力の要素数が分かっている場合のアルゴリズムS(選択標本)と、入力の要素数がわからない場合のアルゴリズムR(保管標本)だ。</p>
+<p>しかし、C++に追加された乱択アルゴリズムの関数テンプレートの宣言は、はじめに説明したように以下の一つしかない。並列アルゴリズムには対応していない。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span>&lt;
+    <span class="kw">class</span> PopulationIterator, <span class="kw">class</span> SampleIterator,
+    <span class="kw">class</span> Distance, <span class="kw">class</span> UniformRandomBitGenerator &gt;
+SampleIterator
+sample(
+    PopulationIterator first, PopulationIterator last,
+    SampleIterator out,
+    Distance n, UniformRandomBitGenerator&amp;&amp; g) ;</code></pre></div>
+<p>[first, last)は標本を選択する先の集合を指すイテレーター。outは標本を出力する先のイテレーター。nは選択する標本の個数。gは標本を選択するのに使う乱数生成器。戻り値はout。</p>
+<p>sampleはPopulationIteratorとSampleIteratorのイテレーターカテゴリーによって、どちらのアルゴリズムを使うべきか判断している。</p>
+<p>アルゴリズムS(選択標本)を使う場合、PopulationIteratorは前方イテレーター、SampleIteratorは出力イテレーターを満たさなければならない。</p>
+<p>アルゴリズムR(保管標本)を使う場合、PopulationIteratorは入力イテレーター、SampleIteratorはランダムアクセスイテレーターを満たさなければならない。</p>
+<p>これはどういうことかというと、要素数の取得のためには、入力元のPopulationIterator [first, last)から要素数を得る必要があり、そのためにはPopulationIteratorは前方イテレーターを満たしていなければならない。その場合、選択した標本はそのままイテレーターに出力すればいいので、出力先のSampleIteratorは出力イテレーターを満たすだけでよい。</p>
+<p>もし入力元のPopulationIteratorが入力イテレーターしか満たさない場合、この場合はPopulationIteratorの[first, last)から要素数を得ることができないので、要素数がわからないときに使えるアルゴリズムR(保管標本)を選択せざるを得ない。その場合、入力を処理するに連れて、新たに選択した標本が既存の標本を上書きするので、出力先のSampleIteratorはランダムアクセスイテレーターである必要がある。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>vector&lt;<span class="dt">int</span>&gt; input ;
+
+    <span class="bu">std::</span>knuth_b g ;
+
+    <span class="co">// PopulationIteratorは前方イテレーターを満たす</span>
+    <span class="co">// SampleIteratorは出力イテレーターでよい</span>
+    <span class="bu">std::</span>sample(    <span class="bu">std::</span>begin(input), <span class="bu">std::</span>end(input),
+                    <span class="bu">std::</span>ostream_iterator&lt;<span class="dt">int</span>&gt;(<span class="bu">std::</span>cout), <span class="dv">100</span>
+                    g ) ;
+
+    <span class="bu">std::</span>vector&lt;<span class="dt">int</span>&gt; sample(<span class="dv">100</span>) ;
+
+    <span class="co">// PopulationIteratorは入力イテレーターしか満たさない</span>
+    <span class="co">// SampleIteratorにはランダムアクセスイテレーターが必要</span>
+    <span class="bu">std::</span>sample(    <span class="bu">std::</span>istream_iterator&lt;<span class="dt">int</span>&gt;(<span class="bu">std::</span>cin), <span class="bu">std::</span>istream_iterator&lt;<span class="dt">int</span>&gt;{},
+                    <span class="bu">std::</span>begin(sample), <span class="dv">100</span>,
+                    g ) ;
+
+}</code></pre></div>
+<p>注意が必要なこととして、C++のsampleは入力元のPopulationIteratorが前方イテレーター以上を満たす場合は、かならずアルゴリズムS(選択標本)を使うということだ。これはつまり、要素数を得るためにstd::distance(first, last)が行われるということを意味する。もしこの処理が非効率的なイテレーターを渡した場合、必要以上に非効率的なコードになってしまう。</p>
+<p>例えば以下のコードは、</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>list&lt;<span class="dt">int</span>&gt; input(<span class="dv">10000</span>) ;
+    <span class="bu">std::</span>list&lt;<span class="dt">int</span>&gt; sample(<span class="dv">100</span>) ;
+    <span class="bu">std::</span>knuth_b g ;
+
+    <span class="bu">std::</span>sample( <span class="bu">std::</span>begin(input), <span class="bu">std::</span>end(input), <span class="bu">std::</span>begin(sample), <span class="dv">100</span>, g ) ;
+}</code></pre></div>
+<p>以下のような意味を持つ。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>list&lt;<span class="dt">int</span>&gt; input(<span class="dv">10000</span>) ;
+    <span class="bu">std::</span>list&lt;<span class="dt">int</span>&gt; sample(<span class="dv">100</span>) ;
+    <span class="bu">std::</span>knuth_b g ;
+
+    <span class="bu">std::</span>size_t count = <span class="dv">0</span> ;
+    
+    <span class="co">// 要素数の得るためにイテレーターを回す</span>
+    <span class="co">// 非効率的</span>
+    <span class="cf">for</span>( <span class="kw">auto</span> &amp;&amp; e : input )
+    { ++count ; }
+
+    <span class="co">// 標本の選択のためにイテレーターを回す</span>
+    <span class="cf">for</span> ( <span class="kw">auto</span> &amp;&amp; e : input )
+    {<span class="co">/* 標本の選択 */</span>}
+}</code></pre></div>
+<p>std::listのメンバー関数sizeは定数時間であることが保障されているため、このコードにおけるイテレーターを回すループは一回に抑えられる。しかし、std::sampleは要素数を渡す実引数がないために要素数がイテレーターを全走査しなくても分かっている場合でも、非効率的な処理を行わなければならない。</p>
+<p>もしランダムアクセスイテレーター未満、前方イテレーター以上のイテレーターカテゴリーのイテレーターの範囲から標本を選択したい場合で、イテレーターの範囲の指す要素数が予め分かっている場合は、自前でアルゴリズムSを実装したほうが効率がよい。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;  <span class="kw">class</span> PopulationIterator, <span class="kw">class</span> SampleIterator,
+            <span class="kw">class</span> Distance, <span class="kw">class</span> UniformRandomBitGenerator &gt;
+SampleIterator
+sample_s(
+    PopulationIterator first, PopulationIterator last,
+    Distance size,
+    SampleIterator out,
+    Distance n, UniformRandomBitGenerator&amp;&amp; g)
+{
+    <span class="co">// 1.</span>
+    Distance t = <span class="dv">0</span> ;
+    Distance m = <span class="dv">0</span> ;
+    <span class="at">const</span> <span class="kw">auto</span> N = size ;
+
+    <span class="kw">auto</span> r = [&amp;]{
+        <span class="bu">std::</span>uniform_int_distribution&lt;&gt; d(<span class="dv">0</span>, N-t) ;
+        <span class="cf">return</span> d(g) ;
+    } ;
+
+    <span class="cf">while</span> ( m &lt; n  &amp;&amp; first != last )
+    {
+        <span class="co">// 2. 3.</span>
+        <span class="cf">if</span> ( r() &gt;= n - m )
+        {<span class="co">// 5.</span>
+            ++t ;
+            ++first ;
+        }
+        <span class="cf">else</span> { <span class="co">// 4.</span>
+            *out = *first ;
+            ++first ; ++out ;
+            ++m ; ++t ;
+        }
+    }
+    
+    <span class="cf">return</span> out ;
+}</code></pre></div>
+<h2 id="shared_ptr-配列に対するshared_ptr">shared_ptr<T[]> : 配列に対するshared_ptr</h2>
+<p>C++17では、shared_ptrが配列に対応した。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="co">// 配列対応のshared_ptr</span>
+    <span class="bu">std::</span>shared_ptr&lt; <span class="dt">int</span> [] &gt; ptr( <span class="kw">new</span> <span class="dt">int</span>[<span class="dv">5</span>] ) ;
+
+    <span class="co">// operator []で配列に添字アクセスできる</span>
+    ptr[<span class="dv">0</span>] = <span class="dv">42</span> ;
+
+    <span class="co">// shared_ptrのデストラクターがdelete[]を呼び出す</span>
+}</code></pre></div>
+<h2 id="as_const-const性の付与">as_const: const性の付与</h2>
+<p>as_constはヘッダーファイル&lt;utility&gt;で定義されている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> T&gt; <span class="kw">constexpr</span> <span class="dt">add_const_t</span>&lt;T&gt;&amp; as_const(T&amp; t) <span class="kw">noexcept</span>
+{
+    <span class="cf">return</span> t ;
+}</code></pre></div>
+<p>as_constは引数として渡したlvalueリファレンスをconstなlvalueリファレンスにキャストする関数だ。const性を付与する手軽なヘルパー関数として使うことができる。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="co">// 1</span>
+<span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;
+<span class="dt">void</span> f( T &amp; ) {}
+<span class="co">// 2、こちらを呼び出したい</span>
+<span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;
+<span class="dt">void</span> f( T <span class="at">const</span> &amp; ) { }
+
+<span class="dt">int</span> main()
+{
+    <span class="dt">int</span> x{} ;
+
+    f(x) ; <span class="co">// 1</span>
+
+    <span class="co">// constを付与する冗長な方法</span>
+    <span class="dt">int</span> <span class="at">const</span> &amp; ref = x ;
+    f(ref) ; <span class="co">// 2</span>
+
+    <span class="co">// 簡潔</span>
+    f( <span class="bu">std::</span>as_const(x) ) ; <span class="co">// 2</span>
+}</code></pre></div>
+<h2 id="make_from_tuple-tupleの要素を実引数にコンストラクターを呼び出す">make_from_tuple : tupleの要素を実引数にコンストラクターを呼び出す</h2>
+<p>make_from_tupleはヘッダーファイル&lt;tuple&gt;で定義されている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> T, <span class="kw">class</span> Tuple&gt;
+<span class="kw">constexpr</span> T make_from_tuple(Tuple&amp;&amp; t);</code></pre></div>
+<p>applyはtupleの要素を実引数に関数を呼び出すライブラリだが、make_from_tupleはtupleの要素を実引数にコンストラクターを呼び出すライブラリだ。</p>
+<p>ある型Tと要素数Nのtuple tに対して、make_from_tuple&lt;T&gt;(t)は、T型をT( get&lt;0&gt;(t), get&lt;1&gt;(t), ... , get&lt;N&gt;(t) )のように構築して、構築したT型のオブジェクトを返す。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">class</span> X
+{
+    <span class="kw">template</span> &lt; <span class="kw">typename</span> ... Types &gt;
+    T( Types ... ) { }
+} ;
+
+<span class="dt">int</span> main()
+{
+    <span class="co">// int, int, int</span>
+    <span class="bu">std::</span>tuple t1(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>) ;
+
+    <span class="co">// X(1,2,3)</span>
+    X x1 = <span class="bu">std::</span>make_from_tuple( t1 ) 
+
+    <span class="co">// int, double, const char *</span>
+    <span class="bu">std::</span>tuple t2( <span class="dv">123</span>, <span class="fl">4.56</span>, <span class="st">&quot;hello&quot;</span> ) ;
+
+    <span class="co">// X(123, 4.56, &quot;hello&quot;)</span>
+    X x2 = <span class="bu">std::</span>make_from_tuple( t2 ) ;
+}</code></pre></div>
+<h2 id="invoke-指定した関数を指定した実引数で呼び出す">invoke : 指定した関数を指定した実引数で呼び出す</h2>
+<p>invokeはヘッダーファイル&lt;functional&gt;で定義されている</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> F, <span class="kw">class</span>... Args&gt;
+<span class="dt">invoke_result_t</span>&lt;F, Args...&gt; invoke(F&amp;&amp; f, Args&amp;&amp;... args)
+<span class="kw">noexcept</span>(is_nothrow_invocable_v&lt;F, Args...&gt;);</code></pre></div>
+<p>invoke( f, t1, t2, ... , tN )は、関数fをf( a1, a2, ... , aN )のように呼び出す。</p>
+<p>より正確には、C++標準規格のINVOKE(f, t1, t2, ... , tN)と同じ規則で呼び出す。これには様々な規則があり、たとえばメンバー関数へのポインターやデータメンバーへのポインター、またその場合に与えるクラスへのオブジェクトがリファレンスかポインターかreference_wrapperかによっても異なる。その詳細はここでは解説しない。</p>
+<p>INVOKEはstd::functionやstd::bindでも使われている規則なので、標準ライブラリと同じ挙動ができるようになると覚えておけばよい。</p>
+<p>例</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">void</span> f( <span class="dt">int</span> ) { }
+
+<span class="kw">struct</span> S
+{
+    <span class="dt">void</span> f( <span class="dt">int</span> ) ;
+    <span class="dt">int</span> data ;
+} ;
+
+<span class="dt">int</span> main()
+{
+    <span class="co">// f( 1 ) </span>
+    <span class="bu">std::</span>invoke( f, <span class="dv">1</span> ) ;
+
+    S s ;
+
+    <span class="co">// (s.*&amp;S::f)(1)</span>
+    <span class="bu">std::</span>invoke( &amp;S::f, s, <span class="dv">1</span> ) ;
+    <span class="co">// ((*&amp;s).*&amp;S::f)(1)</span>
+    <span class="bu">std::</span>invoke( &amp;S::f, &amp;s, <span class="dv">1</span> ) ;
+    <span class="co">// s.*&amp;S::data </span>
+    <span class="bu">std::</span>invoke( &amp;S::data, s ) ;
+}</code></pre></div>
+<h2 id="not_fn-戻り値の否定ラッパー">not_fn : 戻り値の否定ラッパー</h2>
+<p>not_fnはヘッダーファイル&lt;functional&gt;で定義されている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> F&gt; unspecified not_fn(F&amp;&amp; f);</code></pre></div>
+<p>関数オブジェクトfに対してnot_fn(f)を呼び出すと、戻り値として何らかの関数オブジェクトが帰ってくる。その関数オブジェクトを呼び出すと、実引数をfに渡してfを関数呼び出しして、戻り値をoperator !で否定して返す。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+
+    <span class="kw">auto</span> r1 = <span class="bu">std::</span>not_fn( []{ <span class="cf">return</span> <span class="kw">true</span> ; } ) ;
+
+    r1() ; <span class="co">// false</span>
+
+    <span class="kw">auto</span> r2 = <span class="bu">std::</span>not_fn( []( <span class="dt">bool</span> b ) { <span class="cf">return</span> b ; } ) ;
+
+    r2(<span class="kw">true</span>) ; <span class="co">// false</span>
+}</code></pre></div>
+<p>すでに廃止予定になったnot1, not2の代替品。</p>
+<h2 id="メモリー管理アルゴリズム">メモリー管理アルゴリズム</h2>
+<p>C++17ではヘッダーファイル&lt;memory&gt;にメモリー管理用のアルゴリズムが追加された。</p>
+<h3 id="addressof">addressof</h3>
+<p>~<del>c++ template <class T> constexpr T* addressof(T&amp; r) noexcept;</del></p>
+<p>addressofはC++17以前からもある。addressof(r)はrのポインターを取得する。たとえ、rの型がoperaotr &amp;をオーバーロードしていても正しいポインターを取得できる。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">struct</span> S
+{
+    S * <span class="kw">operator</span> &amp;() <span class="at">const</span> <span class="kw">noexcept</span>
+    { <span class="cf">return</span> <span class="kw">nullptr</span> ; } 
+} ;
+
+<span class="dt">int</span> main()
+{
+    S s ;
+
+    <span class="co">// nullptr</span>
+    S * p1 = &amp; s ;
+    <span class="co">// 妥当なポインター</span>
+    S * p2 = <span class="bu">std::</span>addressof(s) ;
+
+}</code></pre></div>
+<h3 id="uninitialized_default_construct">uninitialized_default_construct</h3>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator&gt;
+<span class="dt">void</span> uninitialized_default_construct(ForwardIterator first, ForwardIterator last);
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator, <span class="kw">class</span> Size&gt;
+ForwardIterator uninitialized_default_construct_n(ForwardIterator first, Size n);</code></pre></div>
+<p>[first, last)の範囲、もしくはfirstからn個の範囲の未初期化のメモリーをtypename iterator_traits<ForwardIterator>::value_typeでデフォルト初期化する。2つめのアルゴリズムはfirstからn個をデフォルト初期化する。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="dt">void</span> * raw_ptr = ::<span class="kw">operator</span> <span class="kw">new</span>( <span class="kw">sizeof</span>(<span class="bu">std::</span>string) * <span class="dv">10</span> ) ;
+
+    <span class="bu">std::</span>string * ptr = <span class="kw">static_cast</span>&lt;<span class="bu">std::</span>string *&gt;(raw_ptr) ;
+
+    <span class="bu">std::</span>uninitialized_default_construct_n( ptr, <span class="dv">10</span> ) ;
+    <span class="bu">std::</span>destroy_n( ptr, <span class="dv">10</span> ) ;
+
+    ::<span class="kw">operator</span> <span class="kw">delete</span>( raw_ptr ) ;
+}</code></pre></div>
+<h3 id="uninitialized_value_construct">uninitialized_value_construct</h3>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator&gt;
+<span class="dt">void</span> uninitialized_value_construct(ForwardIterator first, ForwardIterator last);
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator, <span class="kw">class</span> Size&gt;
+ForwardIterator uninitialized_value_construct_n(ForwardIterator first, Size n);</code></pre></div>
+<p>使い方はuninitialized_default_constructと同じ。ただし、こちらはデフォルト初期化ではなく値初期化する。</p>
+<h3 id="uninitialized_copy">uninitialized_copy</h3>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> InputIterator, <span class="kw">class</span> ForwardIterator&gt;
+ForwardIterator
+uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result);
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> InputIterator, <span class="kw">class</span> Size, <span class="kw">class</span> ForwardIterator&gt;
+ForwardIterator
+uninitialized_copy_n(   InputIterator first, Size n, ForwardIterator result);</code></pre></div>
+<p>[first, last)の範囲、もしくはfirstからn個の範囲の値を、resultの指す未初期化のメモリーにコピー構築する。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="dt">int</span> main()
+{
+    <span class="bu">std::</span>vector&lt;<span class="bu">std::</span>string&gt; input(<span class="dv">10</span>, <span class="st">&quot;hello&quot;</span>) ;
+
+    <span class="dt">void</span> * raw_ptr = ::<span class="kw">operator</span> <span class="kw">new</span>( <span class="kw">sizeof</span>(<span class="bu">std::</span>string) * <span class="dv">10</span> ) ;
+    <span class="bu">std::</span>string * ptr = <span class="kw">static_cast</span>&lt;<span class="bu">std::</span>string *&gt;(raw_ptr) ;
+
+    <span class="bu">std::</span>uninitialized_copy_n( <span class="bu">std::</span>begin(input), <span class="bu">std::</span>end(input), <span class="dv">10</span>, ptr ) ;
+    <span class="bu">std::</span>destroy_n( ptr, <span class="dv">10</span> ) ;
+
+    ::<span class="kw">operator</span> <span class="kw">delete</span>( raw_ptr ) ;
+}</code></pre></div>
+<h3 id="uninitialized_move">uninitialized_move</h3>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> InputIterator, <span class="kw">class</span> ForwardIterator&gt;
+ForwardIterator
+uninitialized_move(InputIterator first, InputIterator last, ForwardIterator result);
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> InputIterator, <span class="kw">class</span> Size, <span class="kw">class</span> ForwardIterator&gt;
+pair&lt;InputIterator, ForwardIterator&gt;
+uninitialized_move_n(InputIterator first, Size n, ForwardIterator result);</code></pre></div>
+<p>使い方はuninitialized_copyと同じ。ただしこちらはコピーではなくムーブする。</p>
+<h3 id="uninitialized_fill">uninitialized_fill</h3>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator, <span class="kw">class</span> T&gt;
+<span class="dt">void</span> uninitialized_fill(ForwardIterator first, ForwardIterator last, <span class="at">const</span> T&amp; x);
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator, <span class="kw">class</span> Size, <span class="kw">class</span> T&gt;
+ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n, <span class="at">const</span> T&amp; x);</code></pre></div>
+<p>[first, last)の範囲、もしくはfirstからn個の範囲の未初期化のメモリーを、コンストラクターに実引数xを与えて構築する。</p>
+<h3 id="destory">destory</h3>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> T&gt;
+<span class="dt">void</span> destroy_at(T* location);</code></pre></div>
+<p>location-&gt;~T()を呼び出す</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator&gt;
+<span class="dt">void</span> destroy(ForwardIterator first, ForwardIterator last);
+
+<span class="kw">template</span> &lt;<span class="kw">class</span> ForwardIterator, <span class="kw">class</span> Size&gt;
+ForwardIterator destroy_n(ForwardIterator first, Size n);</code></pre></div>
+<p>[first, last)の範囲、もしくはfirstからn個の範囲にdestroy_atを呼び出す。</p>
+<h2 id="shared_ptrweak_type">shared_ptr::weak_type</h2>
+<p>C++17ではshared_ptrにweak_typeというネストされた型名が追加された。これはshared_ptrに対するweak_ptrのtypedef名となっている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">namespace</span> std {
+
+<span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;
+<span class="kw">class</span> shared_ptr
+{
+    <span class="kw">using</span> weak_ptr = weak_ptr&lt;T&gt; ;
+} ;
+
+}</code></pre></div>
+<p>使い方。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt; <span class="kw">typename</span> Shared_ptr &gt;
+<span class="dt">void</span> f( Shared_ptr sptr )
+{
+    <span class="co">// C++14</span>
+    <span class="kw">auto</span> wptr1 = <span class="bu">std::</span>weak_ptr&lt; <span class="kw">typename</span> Shared_ptr::<span class="dt">element_type</span> &gt;( sptr ) ;
+
+    <span class="co">// C++17</span>
+    <span class="kw">auto</span>  wptr2 = <span class="kw">typename</span> Shared_ptr::<span class="dt">weak_type</span>( sptr ) ;
+}</code></pre></div>
+<h2 id="void_t">void_t</h2>
+<p>ヘッダーファイル&lt;type_traits&gt;で定義されているvoid_tは以下のように定義されている。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">namespace</span> std {
+
+<span class="kw">template</span> &lt; <span class="kw">class</span> ... &gt;
+<span class="kw">using</span> <span class="dt">void_t</span> = <span class="dt">void</span> ;
+
+}</code></pre></div>
+<p>void_tは任意個の型をテンプレート実引数として受け取るvoid型だ。この性質はテンプレートメタプログラミングにおいてとても便利なので、標準ライブラリに追加された。</p>
+<h2 id="bool_constant">bool_constant</h2>
+<p>ヘッダーファイル&lt;type_traits&gt;にbool_constantが追加された。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt;<span class="dt">bool</span> B&gt;
+<span class="kw">using</span> bool_constant = integral_constant&lt;<span class="dt">bool</span>, B&gt;;
+
+<span class="kw">using</span> <span class="dt">true_type</span> = bool_constant&lt;<span class="kw">true</span>&gt;;
+<span class="kw">using</span> <span class="dt">false_type</span> = bool_constant&lt;<span class="kw">false</span>&gt;;</code></pre></div>
+<p>今までintegral_constantを使っていた場面で特にboolだけが必要な場面では、C++17以降は単にstd::true_typeかstd::false_typeと書くだけでよくなる。</p>
+<h2 id="変数テンプレート版のtraits">変数テンプレート版のtraits</h2>
+<p>C++17では、既存のtraitsに変数テンプレートを利用した_v版が追加された。</p>
+<p>例えば、is_integral&lt;T&gt;::valueと書く代わりにis_integral_v&lt;T&gt;と書くことができる。</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="kw">template</span> &lt; <span class="kw">typename</span> T &gt;
+<span class="dt">void</span> f( T x )
+{
+    <span class="kw">constexpr</span> <span class="dt">bool</span> b1 = <span class="bu">std::</span>is_integral&lt;T&gt;::value ; <span class="co">// データメンバー</span>
+    <span class="kw">constexpr</span> <span class="dt">bool</span> b2 = <span class="bu">std::</span>is_integral_v&lt;T&gt; ; <span class="co">// 変数テンプレート</span>
+    <span class="kw">constexpr</span> <span class="dt">bool</span> b3 = <span class="bu">std::</span>is_integral&lt;T&gt;{} ; <span class="co">// operator bool()</span>
+}</code></pre></div>
 </body>
 </html>
